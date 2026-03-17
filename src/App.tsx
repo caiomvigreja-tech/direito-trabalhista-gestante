@@ -137,19 +137,22 @@ export default function App() {
           </div>
 
           {/* MATÉRIA JORNALÍSTICA */}
-          <div className="bg-white text-[#050C3B] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row transform transition hover:scale-[1.01]">
-            <div className="md:w-2/5 bg-gray-200 relative min-h-[250px] flex items-center justify-center group cursor-pointer" onClick={() => window.open('https://youtu.be/PiXdoNtGgOI', '_blank')}>
-              <img src="https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=800" alt="Justiça" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-80 transition duration-500" />
-              <div className="absolute inset-0 bg-[#050C3B]/20 mix-blend-multiply"></div>
-              <PlayCircle className="w-20 h-20 text-white relative z-10 opacity-90 group-hover:scale-110 transition duration-300 drop-shadow-lg" />
+          <div className="bg-white text-[#050C3B] rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row">
+            <div className="md:w-1/2 relative aspect-video md:aspect-auto min-h-[300px]">
+              <iframe 
+                className="absolute inset-0 w-full h-full"
+                src="https://www.youtube.com/embed/PiXdoNtGgOI?si=1XPAE5rBvGel4BxZ" 
+                title="YouTube video player" 
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerPolicy="strict-origin-when-cross-origin" 
+                allowFullScreen
+              ></iframe>
             </div>
-            <div className="p-10 md:w-3/5 flex flex-col justify-center">
+            <div className="p-10 md:w-1/2 flex flex-col justify-center">
               <span className="text-sm font-bold text-[#C9A44C] uppercase tracking-wider mb-3">Na Mídia</span>
               <h3 className="font-serif text-2xl font-bold mb-4 leading-snug">STF reafirma direito à estabilidade de gestante em contrato de experiência</h3>
-              <p className="text-gray-600 mb-6 text-lg">Decisão do Supremo Tribunal Federal garante proteção ao emprego contra dispensa sem justa causa.</p>
-              <a href="https://youtu.be/PiXdoNtGgOI" target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-[#050C3B] font-bold hover:text-[#C9A44C] transition text-lg group">
-                Assistir reportagem <ChevronRight className="w-5 h-5 ml-1 group-hover:translate-x-1 transition" />
-              </a>
+              <p className="text-gray-600 text-lg">Decisão do Supremo Tribunal Federal garante proteção ao emprego contra dispensa sem justa causa.</p>
             </div>
           </div>
         </div>
@@ -160,7 +163,7 @@ export default function App() {
         <div className="max-w-5xl mx-auto">
           <div className="bg-white rounded-[2rem] overflow-hidden shadow-xl flex flex-col md:flex-row border border-gray-100">
             <div className="md:w-2/5 relative h-[500px] md:h-auto">
-              <img src="https://storage.googleapis.com/aistudio-janus-prod-appspot-com/user_content/images/30349c89-8b01-4475-a83d-d345f0967396.jpeg" alt="Dr. Filipe Cunha" className="absolute inset-0 w-full h-full object-cover object-top" />
+              <img src="https://storage.googleapis.com/aistudio-janus-prod-appspot-com/user_content/images/e62243e8-5423-455b-b9f1-3290b2016335.jpg" alt="Dr. Filipe Cunha" className="absolute inset-0 w-full h-full object-cover object-top" />
             </div>
             <div className="md:w-3/5 p-10 md:p-14 flex flex-col justify-center">
               <h4 className="text-[#C9A44C] font-bold tracking-widest uppercase text-sm mb-3">Quem vai cuidar do seu caso</h4>
