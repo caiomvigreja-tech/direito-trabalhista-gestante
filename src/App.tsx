@@ -457,7 +457,7 @@ export default function App() {
             Descubra agora quanto você pode receber de indenização.
           </h2>
           <p className="text-xl text-gray-300 mb-12 font-light">
-            Preencha os dados abaixo para uma análise técnica e gratuita da sua situação.
+            Preencha os dados abaixo para uma análise técnica da sua situação.
           </p>
 
           <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-2xl text-gray-800 max-w-xl mx-auto text-left border border-gray-100">
