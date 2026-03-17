@@ -3,7 +3,6 @@ import {
   CheckCircle2, 
   ChevronRight, 
   AlertCircle, 
-  Scale, 
   Calculator, 
   ArrowRight, 
   PlayCircle,
@@ -19,13 +18,92 @@ import {
   ShieldCheck,
   Lock,
   MapPin,
-  Globe
+  Globe,
+  X
 } from 'lucide-react';
 
 export default function App() {
   const calcRef = useRef<HTMLDivElement>(null);
   const [isCalcVisible, setIsCalcVisible] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  // Estados para o Fluxo Inteligente de Lead
+  const [isSurveyOpen, setIsSurveyOpen] = useState(false);
+  const [currentSurveyStep, setCurrentSurveyStep] = useState(1);
+  const [surveyDeadlineAlert, setSurveyDeadlineAlert] = useState(false);
+  const [isThankYouOpen, setIsThankYouOpen] = useState(false);
+
+  // Estados para Modal Legal
+  const [legalModal, setLegalModal] = useState<{ isOpen: boolean, title: string, content: React.ReactNode } | null>(null);
+
+  const openLegalModal = (type: 'privacy' | 'terms' | 'ethics') => {
+    const content = {
+      privacy: {
+        title: "Política de Privacidade",
+        content: (
+          <div className="space-y-4 text-gray-600 leading-relaxed text-sm">
+            <p className="font-bold text-[#050C3B]">1. Coleta de Dados</p>
+            <p>Coletamos seu nome e WhatsApp exclusivamente para realizar o atendimento solicitado sobre direitos trabalhistas de gestantes.</p>
+            <p className="font-bold text-[#050C3B]">2. Uso e Finalidade</p>
+            <p>Seus dados serão utilizados apenas para que o Dr. Filipe Cunha ou sua equipe técnica entre em contato via WhatsApp para fornecer orientações jurídicas iniciais.</p>
+            <p className="font-bold text-[#050C3B]">3. Proteção e Sigilo</p>
+            <p>As informações compartilhadas em nosso formulário são protegidas pelo sigilo profissional advogado-cliente. Não compartilhamos, vendemos ou cedemos suas informações a terceiros sob nenhuma hipótese.</p>
+            <p className="font-bold text-[#050C3B]">4. Seus Direitos (LGPD)</p>
+            <p>Em conformidade com a Lei 13.709/2018 (LGPD), você pode solicitar a exclusão definitiva dos seus dados de nossa base de contatos a qualquer momento através do nosso WhatsApp oficial.</p>
+          </div>
+        )
+      },
+      terms: {
+        title: "Termos de Uso",
+        content: (
+          <div className="space-y-4 text-gray-600 leading-relaxed text-sm">
+            <p className="font-bold text-[#050C3B]">1. Natureza Informativa</p>
+            <p>O conteúdo deste site tem caráter meramente informativo e educacional. As informações aqui contidas não substituem um parecer jurídico individualizado.</p>
+            <p className="font-bold text-[#050C3B]">2. Inexistência de Vínculo Contratual</p>
+            <p>O preenchimento de formulários ou o envio de mensagens não estabelece, por si só, uma relação de prestação de serviços advocatícios. Tal relação só é formalizada mediante assinatura de contrato de honorários.</p>
+            <p className="font-bold text-[#050C3B]">3. Propriedade Intelectual</p>
+            <p>Todo o design, textos e vídeos deste site são de propriedade exclusiva do escritório Filipe Cunha Advocacia, sendo proibida a reprodução sem autorização.</p>
+          </div>
+        )
+      },
+      ethics: {
+        title: "Ética e Compliance",
+        content: (
+          <div className="space-y-4 text-gray-600 leading-relaxed text-sm">
+            <p className="font-bold text-[#050C3B]">1. Compromisso Ético</p>
+            <p>Atuamos em total conformidade com o Estatuto da Advocacia e o Código de Ética e Disciplina da OAB.</p>
+            <p className="font-bold text-[#050C3B]">2. Transparência</p>
+            <p>Prezamos pela clareza absoluta nas informações prestadas, garantindo que a cliente compreenda todos os seus direitos e as etapas de um possível processo.</p>
+            <p className="font-bold text-[#050C3B]">3. Sigilo Profissional</p>
+            <p>O dever de sigilo é pilar fundamental de nossa atuação, abrangendo todas as informações recebidas durante o atendimento preliminar ou no curso da ação judicial.</p>
+          </div>
+        )
+      }
+    };
+    setLegalModal({ isOpen: true, ...content[type] });
+  };
+
+  const handleLeadCapture = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Primeiro salva o lead (simulado), depois abre a qualificação
+    setIsSurveyOpen(true);
+    setCurrentSurveyStep(1);
+    setSurveyDeadlineAlert(false);
+  };
+
+  const handleSurveyOption = (step: number, optionValue: string) => {
+    if (step === 1 && optionValue === "Mais de 2 anos") {
+      setSurveyDeadlineAlert(true);
+      return;
+    }
+    
+    if (currentSurveyStep < 3) {
+      setCurrentSurveyStep(prev => prev + 1);
+    } else {
+      setIsSurveyOpen(false);
+      setIsThankYouOpen(true);
+    }
+  };
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -87,8 +165,8 @@ export default function App() {
         </div>
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center relative z-10 py-24 md:py-40 px-4 w-full">
           <div className="space-y-6 text-white text-center md:text-left">
-            <div className="flex items-center space-x-2 text-[#C9A44C] font-semibold tracking-wider text-sm uppercase">
-              <Scale className="w-4 h-4" />
+            <div className="flex items-center justify-center md:justify-start space-x-2 text-[#C9A44C] font-semibold tracking-wider text-sm uppercase">
+              <div className="w-2 h-2 rounded-full bg-[#C9A44C]" />
               <span>Advogado da Gestante · Todo o Brasil</span>
             </div>
             <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
@@ -101,16 +179,16 @@ export default function App() {
 
           <div id="contact-form" className="bg-white rounded-2xl p-6 md:p-8 shadow-2xl text-gray-800 max-w-md mx-auto w-full border border-gray-100">
             <h3 className="font-serif text-2xl font-bold text-[#050C3B] mb-6 text-center">Fale com um especialista</h3>
-            <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-4" onSubmit={handleLeadCapture}>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Seu nome completo</label>
-                <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#C9A44C] focus:border-transparent outline-none transition bg-gray-50" placeholder="Digite seu nome" required />
+                <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#C9A44C] focus:border-transparent outline-none transition bg-gray-50 placeholder:text-gray-400" placeholder="Digite seu nome" required />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Seu WhatsApp</label>
-                <input type="tel" className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#C9A44C] focus:border-transparent outline-none transition bg-gray-50" placeholder="(00) 00000-0000" required />
+                <input type="tel" className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#C9A44C] focus:border-transparent outline-none transition bg-gray-50 placeholder:text-gray-400" placeholder="(00) 00000-0000" required />
               </div>
-              <button className="w-full bg-gradient-to-r from-[#B8963D] to-[#E0C878] hover:from-[#C9A44C] hover:to-[#C9A44C] text-[#050C3B] font-bold text-lg py-4 rounded-xl shadow-lg transform transition hover:-translate-y-1 flex items-center justify-center space-x-2 mt-2">
+              <button type="submit" className="w-full bg-gradient-to-r from-[#B8963D] to-[#E0C878] hover:from-[#C9A44C] hover:to-[#C9A44C] text-[#050C3B] font-bold text-lg py-4 rounded-xl shadow-lg transform transition hover:-translate-y-1 flex items-center justify-center space-x-2 mt-2">
                 <span>Quero saber se tenho direito</span>
                 <ArrowRight className="w-5 h-5" />
               </button>
@@ -131,7 +209,10 @@ export default function App() {
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#050C3B] mb-4">Quem tem direito à indenização por estabilidade?</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto font-light">A lei protege a gestante desde a confirmação da gravidez. Isso vale para a maioria das situações.</p>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto font-light">
+              A lei protege a gestante desde a confirmação da gravidez.<br />
+              Isso vale para a maioria das situações.
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
@@ -461,7 +542,7 @@ export default function App() {
           </p>
 
           <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-2xl text-gray-800 max-w-xl mx-auto text-left border border-gray-100">
-            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+            <form className="space-y-6" onSubmit={handleLeadCapture}>
               <div>
                 <label className="block text-sm font-bold text-[#050C3B] mb-2 uppercase tracking-wide">Nome Completo</label>
                 <input 
@@ -480,7 +561,7 @@ export default function App() {
                   required 
                 />
               </div>
-              <button className="w-full bg-gradient-to-r from-[#B8963D] to-[#E0C878] hover:from-[#C9A44C] hover:to-[#C9A44C] text-[#050C3B] font-black text-lg py-5 rounded-2xl shadow-xl transform transition hover:-translate-y-1 flex items-center justify-center space-x-3 mt-6">
+              <button type="submit" className="w-full bg-gradient-to-r from-[#B8963D] to-[#E0C878] hover:from-[#C9A44C] hover:to-[#C9A44C] text-[#050C3B] font-black text-lg py-5 rounded-2xl shadow-xl transform transition hover:-translate-y-1 flex items-center justify-center space-x-3 mt-6">
                 <span>QUERO SABER SE TENHO DIREITO</span>
                 <ArrowRight className="w-6 h-6" />
               </button>
@@ -557,9 +638,9 @@ export default function App() {
             <div className="space-y-6">
               <h4 className="text-white font-bold uppercase tracking-widest text-sm">Legal</h4>
               <ul className="space-y-3">
-                <li><a href="#" className="hover:text-[#C9A44C] transition-colors text-sm">Política de Privacidade</a></li>
-                <li><a href="#" className="hover:text-[#C9A44C] transition-colors text-sm">Termos de Uso</a></li>
-                <li><a href="#" className="hover:text-[#C9A44C] transition-colors text-sm">Ética e Compliance</a></li>
+                <li><button onClick={() => openLegalModal('privacy')} className="hover:text-[#C9A44C] transition-colors text-sm text-left">Política de Privacidade</button></li>
+                <li><button onClick={() => openLegalModal('terms')} className="hover:text-[#C9A44C] transition-colors text-sm text-left">Termos de Uso</button></li>
+                <li><button onClick={() => openLegalModal('ethics')} className="hover:text-[#C9A44C] transition-colors text-sm text-left">Ética e Compliance</button></li>
                 <li className="text-xs pt-2">Dr. Filipe Cunha · OAB Nº 221.727</li>
               </ul>
             </div>
@@ -578,6 +659,189 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {isSurveyOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 overflow-y-auto py-10">
+          <div className="fixed inset-0 bg-[#050C3B]/70 backdrop-blur-md transition-opacity duration-500" onClick={() => setIsSurveyOpen(false)}></div>
+          <div className="bg-white w-full max-w-lg rounded-[3rem] p-10 md:p-14 shadow-2xl relative z-10 overflow-hidden min-h-[580px] flex flex-col transition-all duration-500 animate-in zoom-in-95 fade-in">
+            {!surveyDeadlineAlert ? (
+              <div className="flex-grow flex flex-col">
+                <div className="flex flex-col items-center text-center mb-10">
+                  <div className="w-12 h-12 bg-[#F8F9FA] rounded-2xl flex items-center justify-center mb-4 border border-gray-100 shadow-sm">
+                    {currentSurveyStep === 1 && <Calendar className="w-6 h-6 text-[#C9A44C]" />}
+                    {currentSurveyStep === 2 && <Pencil className="w-6 h-6 text-[#C9A44C]" />}
+                    {currentSurveyStep === 3 && <Calculator className="w-6 h-6 text-[#C9A44C]" />}
+                  </div>
+                  <h4 className="text-[#050C3B] font-serif text-2xl font-bold mb-1">Falta muito pouco</h4>
+                  <p className="text-gray-400 text-sm font-medium">Sua análise técnica está sendo preparada.</p>
+                </div>
+
+                {/* Barra de Progresso Estilizada */}
+                <div className="flex items-center gap-3 mb-12">
+                  <span className="text-[10px] font-black text-[#050C3B]/30 uppercase tracking-[0.2em]">{currentSurveyStep}/3</span>
+                  <div className="flex-grow flex gap-1.5">
+                    {[1, 2, 3].map((step) => (
+                      <div 
+                        key={step} 
+                        className={`h-1.5 flex-1 rounded-full transition-all duration-700 ease-out ${step <= currentSurveyStep ? 'bg-gradient-to-r from-[#050C3B] to-[#0a1564]' : 'bg-gray-100'}`}
+                        style={{ 
+                          boxShadow: step === currentSurveyStep ? '0 0 10px rgba(5,12,59,0.1)' : 'none',
+                          transform: step === currentSurveyStep ? 'scaleY(1.2)' : 'scaleY(1)'
+                        }}
+                      ></div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Perguntas com Layout Amigável */}
+                <div className="flex-grow flex flex-col">
+                  {currentSurveyStep === 1 && (
+                    <div className="animate-in fade-in slide-in-from-bottom-6 duration-700">
+                      <p className="text-[#050C3B] font-serif text-2xl font-bold mb-8 leading-tight text-center">Há quanto tempo ocorreu o seu desligamento?</p>
+                      <div className="grid gap-3">
+                        {["Menos de 6 meses", "Entre 6 meses e 1 ano", "Entre 1 ano e 2 anos", "Mais de 2 anos"].map((opt) => (
+                          <button 
+                            key={opt}
+                            onClick={() => handleSurveyOption(1, opt)}
+                            className="w-full p-6 rounded-[1.5rem] bg-[#FDFDFD] border border-gray-100 text-[#050C3B] font-bold hover:bg-white hover:border-[#C9A44C] hover:shadow-xl hover:shadow-[#C9A44C]/5 transition-all duration-300 text-left flex items-center justify-between group transform hover:-translate-y-1"
+                          >
+                            <span className="text-lg">{opt}</span>
+                            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-[#C9A44C]/10 transition-colors">
+                              <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#C9A44C] transition-colors" />
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {currentSurveyStep === 2 && (
+                    <div className="animate-in fade-in slide-in-from-right-6 duration-700">
+                      <p className="text-[#050C3B] font-serif text-2xl font-bold mb-8 leading-tight text-center">Como aconteceu o seu desligamento?</p>
+                      <div className="grid gap-3">
+                        {[
+                          { label: "Fui demitida pela empresa", icon: "🏢" },
+                          { label: "Pedi demissão sem saber que estava grávida", icon: "🤰" },
+                          { label: "Pedi demissão por pressão ou mudança", icon: "⚖️" },
+                          { label: "Ainda não fui demitida, mas sofro pressão", icon: "⚠️" }
+                        ].map((opt) => (
+                          <button 
+                            key={opt.label}
+                            onClick={() => handleSurveyOption(2, opt.label)}
+                            className="w-full p-6 rounded-[1.5rem] bg-[#FDFDFD] border border-gray-100 text-[#050C3B] font-bold hover:bg-white hover:border-[#C9A44C] hover:shadow-xl hover:shadow-[#C9A44C]/5 transition-all duration-300 text-left flex items-center justify-between group transform hover:-translate-y-1"
+                          >
+                            <div className="flex items-center space-x-4">
+                              <span className="text-2xl grayscale group-hover:grayscale-0 transition-all">{opt.icon}</span>
+                              <span className="text-lg leading-tight">{opt.label}</span>
+                            </div>
+                            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-[#C9A44C]/10 transition-colors">
+                              <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#C9A44C] transition-colors" />
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {currentSurveyStep === 3 && (
+                    <div className="animate-in fade-in slide-in-from-right-6 duration-700">
+                      <p className="text-[#050C3B] font-serif text-2xl font-bold mb-8 leading-tight text-center">Qual era o seu salário aproximado na época?</p>
+                      <div className="grid gap-3">
+                        {["Até R$ 2.000", "Entre R$ 2.000 e R$ 5.000", "Acima de R$ 5.000", "Trabalhava sem registro"].map((opt) => (
+                          <button 
+                            key={opt}
+                            onClick={() => handleSurveyOption(3, opt)}
+                            className="w-full p-6 rounded-[1.5rem] bg-[#FDFDFD] border border-gray-100 text-[#050C3B] font-bold hover:bg-white hover:border-[#C9A44C] hover:shadow-xl hover:shadow-[#C9A44C]/5 transition-all duration-300 text-left flex items-center justify-between group transform hover:-translate-y-1"
+                          >
+                            <span className="text-lg">{opt}</span>
+                            <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-[#C9A44C]/10 transition-colors">
+                              <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-[#C9A44C] transition-colors" />
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-6 animate-in zoom-in-95 duration-700 flex flex-col items-center flex-grow justify-center">
+                 <div className="w-28 h-28 bg-red-50 rounded-full flex items-center justify-center mb-10 border-4 border-red-100 shadow-inner">
+                   <AlertCircle className="w-14 h-14 text-[#D32F2F] animate-pulse" />
+                 </div>
+                 <h4 className="text-[#050C3B] font-serif text-3xl font-bold mb-6 leading-tight">Atenção ao seu prazo</h4>
+                 <p className="text-gray-500 mb-12 text-lg leading-relaxed font-medium px-4">Pela sua resposta, o prazo legal para esse caso pode ter encerrado. Mas nossa equipe pode analisar se há <span className="text-[#050C3B] font-bold underline decoration-[#C9A44C]">exceções para você</span>.</p>
+                 <button 
+                    onClick={() => { setIsSurveyOpen(false); setIsThankYouOpen(true); }}
+                    className="w-full bg-[#050C3B] text-white font-bold py-7 rounded-[1.5rem] shadow-2xl hover:bg-[#0a1564] transition-all transform hover:-translate-y-1 text-lg"
+                 >
+                   QUERO ORIENTAÇÃO MESMO ASSIM
+                 </button>
+              </div>
+            )}
+
+            {/* Decorativo */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gray-50 rounded-full -mr-16 -mt-16 -z-10"></div>
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-gray-50/50 rounded-full -ml-12 -mb-12 -z-10"></div>
+          </div>
+        </div>
+      )}
+
+      {/* POP-UP DE OBRIGADO */}
+      {isThankYouOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">
+          <div className="absolute inset-0 bg-[#050C3B]/90 backdrop-blur-md" onClick={() => setIsThankYouOpen(false)}></div>
+          <div className="bg-[#050C3B] w-full max-w-lg rounded-[3rem] p-10 md:p-16 shadow-2xl relative z-10 text-center border border-white/10 overflow-hidden">
+            <div className="w-24 h-24 bg-[#3E9B77] rounded-full flex items-center justify-center mx-auto mb-10 shadow-2xl shadow-[#3E9B77]/20 border-8 border-[#3E9B77]/20">
+              <Check className="w-12 h-12 text-white stroke-[3]" />
+            </div>
+            <h3 className="text-white font-serif text-3xl md:text-4xl font-bold mb-6">Recebemos as suas informações.</h3>
+            <p className="text-gray-300 text-lg md:text-xl font-light leading-relaxed">
+              Em breve nossa equipe entra em contato pelo WhatsApp para explicar seus direitos e <span className="text-[#C9A44C] font-bold">estimar o valor da sua indenização.</span>
+            </p>
+            <button 
+              onClick={() => setIsThankYouOpen(false)}
+              className="mt-12 w-full py-5 rounded-2xl border border-white/20 text-white font-bold hover:bg-white/10 transition-colors uppercase tracking-widest text-sm"
+            >
+              Ok, entendi
+            </button>
+            
+            {/* Watermark sutil no background do modal */}
+            <div className="absolute -bottom-20 -right-20 opacity-[0.05] pointer-events-none transform -rotate-12">
+              <CheckCircle2 className="w-64 h-64 text-white" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL LEGAL (GENÉRICO) */}
+      {legalModal?.isOpen && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center px-4 overflow-y-auto py-10">
+          <div className="absolute inset-0 bg-[#050C3B]/80 backdrop-blur-sm" onClick={() => setLegalModal(null)}></div>
+          <div className="bg-white w-full max-w-lg rounded-[2.5rem] p-8 md:p-12 shadow-2xl relative z-10 animate-in fade-in zoom-in-95 duration-300">
+            <button 
+              onClick={() => setLegalModal(null)}
+              className="absolute top-6 right-6 p-2 text-gray-400 hover:text-[#050C3B] transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div className="mb-6">
+              <h4 className="text-[#050C3B] font-serif text-2xl font-bold">{legalModal.title}</h4>
+              <div className="h-1 w-12 bg-[#C9A44C] mt-2 rounded-full"></div>
+            </div>
+            
+            <div className="py-2">
+              {legalModal.content}
+            </div>
+            
+            <button 
+              onClick={() => setLegalModal(null)}
+              className="mt-8 w-full bg-gray-50 text-[#050C3B] font-bold py-4 rounded-xl hover:bg-gray-100 transition-colors uppercase tracking-widest text-xs"
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
