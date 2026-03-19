@@ -19,6 +19,7 @@ import {
   Lock,
   MapPin,
   Globe,
+  Scale,
   X
 } from 'lucide-react';
 
@@ -166,7 +167,7 @@ export default function App() {
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center relative z-10 py-24 md:py-40 px-4 w-full">
           <div className="space-y-6 text-white text-center md:text-left">
             <div className="flex items-center justify-center md:justify-start space-x-2 text-[#C9A44C] font-semibold tracking-wider text-sm uppercase">
-              <div className="w-2 h-2 rounded-full bg-[#C9A44C]" />
+              <Scale className="w-4 h-4" />
               <span>Advogado da Gestante · Todo o Brasil</span>
             </div>
             <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
