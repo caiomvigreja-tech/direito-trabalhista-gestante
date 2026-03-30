@@ -7,6 +7,11 @@
   
   --animate-float: float 3s ease-in-out infinite;
   --animate-draw-circle: drawCircle 1.5s ease-out forwards;
+  --animate-hourglass: hourglass 5s ease-in-out infinite;
+  --animate-spin-fast: spin 1s linear infinite;
+  --animate-breathing: breathing 6s ease-in-out infinite;
+  --animate-sand-top: sand-top 5s ease-in-out infinite;
+  --animate-sand-bottom: sand-bottom 5s ease-in-out infinite;
 
   @keyframes float {
     0%, 100% { transform: translateY(0); }
@@ -16,6 +21,26 @@
   @keyframes drawCircle {
     from { stroke-dashoffset: 300; }
     to { stroke-dashoffset: 0; }
+  }
+
+  @keyframes breathing {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.01); }
+  }
+
+  @keyframes sand-top {
+    0%, 10% { transform: scaleY(1); }
+    90%, 100% { transform: scaleY(0); }
+  }
+
+  @keyframes sand-bottom {
+    0%, 10% { transform: scaleY(0); }
+    90%, 100% { transform: scaleY(1); }
+  }
+
+  @keyframes hourglass {
+    0%, 10% { transform: rotate(0); }
+    90%, 100% { transform: rotate(180deg); }
   }
 }
 

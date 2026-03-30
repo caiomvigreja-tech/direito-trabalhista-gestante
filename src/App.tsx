@@ -26,7 +26,8 @@ import {
   X,
   Play,
   Quote,
-  Clock
+  Clock,
+  Hourglass
 } from 'lucide-react';
 
 export default function App() {
@@ -49,9 +50,15 @@ export default function App() {
   useEffect(() => {
     if (showVideo) {
       const player = new Plyr('.js-plyr', {
+        autoplay: true,
         controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
-        youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3, modestbranding: 1 }
+        youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3, modestbranding: 1, autoplay: 1 }
       });
+      
+      player.on('ready', (event) => {
+        player.play();
+      });
+
       return () => {
         if (player) player.destroy();
       };
@@ -250,13 +257,13 @@ export default function App() {
           <div className="hidden lg:block relative h-full min-h-[500px] w-full">
             {/* Indenização Garantida - Superior Direita */}
             {/* Indenização Garantida - Superior Direita */}
-            <div className="absolute top-[36%] left-[42%] animate-float bg-white/15 backdrop-blur-md border border-white/20 rounded-2xl p-5 shadow-2xl flex items-center gap-4 z-20">
-              <div className="bg-[#C9A44C] rounded-full p-2.5 shadow-sm">
-                <ShieldCheck className="w-6 h-6 text-[#050C3B]" />
+            <div className="absolute top-[36%] left-[42%] animate-float bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.4)] flex items-center gap-5 z-20 w-[410px]">
+              <div className="bg-[#C9A44C] rounded-full p-3 shadow-lg shrink-0">
+                <ShieldCheck className="w-7 h-7 text-[#050C3B]" />
               </div>
-              <div className="flex flex-col gap-0.5">
-                <span className="text-white font-bold text-sm tracking-tight leading-tight">Indenização por estabilidade</span>
-                <span className="text-white/80 font-medium text-xs mt-0.5">Pagamento de salários e verbas, sem a obrigação de retornar à empresa.</span>
+              <div className="flex flex-col gap-1">
+                <span className="text-white font-bold text-base tracking-tight leading-tight">Indenização por estabilidade</span>
+                <span className="text-white/80 font-medium text-sm mt-0.5">Pagamento de salários e verbas, sem a obrigação de retornar à empresa.</span>
               </div>
             </div>
           </div>
@@ -641,53 +648,82 @@ export default function App() {
 
 
 
+      {/* BLOCO FINAL: CONVERSÃO E GALERIA (Inspirado no screenshot - Refinado) */}
+      {/* Alerta de Prazo finalizado (Bloco Todo Vermelho Elegante) */}
+      <section className="py-20 px-4 bg-[#7A2D2B] text-white relative overflow-hidden">
+        <div className="max-w-4xl mx-auto text-center flex flex-col items-center relative z-10">
+          {/* Clock Icon Block */}
+          <div className="mb-8 relative">
+            <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-sm shadow-inner group-hover:scale-110 transition-transform">
+              <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" strokeOpacity="0.2" />
+                <path d="M12 12L12 6" className="origin-[12px_12px] animate-spin-fast" />
+                <path d="M12 12L16 12" className="origin-[12px_12px] animate-spin" style={{ animationDuration: '6s' }} />
+              </svg>
+            </div>
+            <div className="absolute inset-0 border-4 border-white/10 rounded-full animate-ping opacity-20"></div>
+          </div>
+          
+          <h3 className="font-serif text-2xl md:text-3xl font-bold mb-4 tracking-tight">
+            Atenção: seu prazo está diminuindo.
+          </h3>
+          <div className="max-w-2xl mx-auto space-y-4">
+            <p className="text-white/80 text-base md:text-lg leading-relaxed font-light">
+              A lei trabalhista estabelece um prazo para buscar seus direitos — que começou a correr na data da demissão.
+            </p>
+            <div className="text-white font-bold text-lg md:text-xl border-t border-white/10 pt-6 inline-block w-full">
+              Quanto antes você agir, mais chances você tem.
+            </div>
+          </div>
+        </div>
 
-
+        {/* Subtle Textured Background for elegance */}
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)] bg-[size:16px_16px]"></div>
+      </section>
 
       {/* BLOCO FINAL: CONVERSÃO E GALERIA (Inspirado no screenshot - Refinado) */}
-      <section className="py-24 px-4 bg-[#F8F9FA] relative overflow-hidden">
+      <section className="py-24 md:py-32 px-4 bg-white relative overflow-hidden">
         <div className="max-w-7xl mx-auto text-center relative z-10">
-          <div className="mb-16">
-            <h2 className="font-serif text-3xl md:text-5xl font-bold text-[#050C3B] mb-6 tracking-tight max-w-4xl mx-auto leading-tight">
-              Consulte um <span className="text-[#C9A44C]">advogado de confiança</span> e descubra se você pode ter direito.
+          <div className="mb-10">
+            <h2 className="font-serif text-3xl md:text-5xl font-bold text-[#050C3B] mb-3 tracking-tight max-w-4xl mx-auto leading-tight text-pretty">
+              Consulte um <span className="text-[#C9A44C]">advogado de confiança</span> e descubra agora se você pode ter direito.
             </h2>
             <p className="text-gray-500 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-light">
               Nossa equipe de especialistas está à disposição para analisar o seu caso.
             </p>
           </div>
 
-          <div className="mt-2 bg-[#F8F9FA] rounded-[3rem] p-4 md:p-10 relative">
+          <div className="mt-2 p-0 relative">
             {/* Floating Contact Card - Centered and Clean */}
-            <div className="relative w-full max-w-lg mx-auto px-4 z-20">
-              <div className="bg-white border border-gray-100 shadow-[0_32px_64px_-16px_rgba(5,12,59,0.1)] rounded-[3rem] p-8 md:p-12 text-left">
-                <div className="text-center mb-8">
-                  <h4 className="font-serif text-2xl font-bold text-[#050C3B]">Iniciar minha análise</h4>
-                  <p className="text-gray-400 text-sm">Preencha para saber se você tem direito agora.</p>
-                </div>
+            <div className="relative w-full max-w-2xl mx-auto px-4 z-20 animate-breathing">
+              <div className="bg-white border border-gray-100 shadow-[0_32px_64px_-16px_rgba(5,12,59,0.1)] rounded-[3rem] p-8 md:p-10 text-left">
+                <div className="pt-2"></div>
                 
                 <form className="space-y-4" onSubmit={handleLeadCapture}>
-                  <div>
-                    <input 
-                      type="text" 
-                      className="w-full px-5 py-4 rounded-xl border border-gray-100 focus:ring-2 focus:ring-[#C9A44C] outline-none transition bg-gray-50 text-gray-800 placeholder:text-gray-400" 
-                      placeholder="Seu Nome completo" 
-                      value={formData.name}
-                      onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                      required 
-                    />
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <input 
+                        type="text" 
+                        className="w-full px-5 py-4 rounded-xl border border-gray-100 focus:ring-2 focus:ring-[#C9A44C] outline-none transition bg-gray-50 text-gray-800 placeholder:text-gray-400" 
+                        placeholder="Seu Nome" 
+                        value={formData.name}
+                        onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                        required 
+                      />
+                    </div>
+                    <div>
+                      <input 
+                        type="tel" 
+                        className="w-full px-5 py-4 rounded-xl border border-gray-100 focus:ring-2 focus:ring-[#C9A44C] outline-none transition bg-gray-50 text-gray-800 placeholder:text-gray-400" 
+                        placeholder="Seu WhatsApp" 
+                        value={formData.phone}
+                        onChange={handlePhoneChange}
+                        required 
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <input 
-                      type="tel" 
-                      className="w-full px-5 py-4 rounded-xl border border-gray-100 focus:ring-2 focus:ring-[#C9A44C] outline-none transition bg-gray-50 text-gray-800 placeholder:text-gray-400" 
-                      placeholder="Seu WhatsApp" 
-                      value={formData.phone}
-                      onChange={handlePhoneChange}
-                      required 
-                    />
-                  </div>
-                  <button type="submit" className="w-full bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-5 rounded-2xl shadow-xl transition-all flex items-center justify-between px-8 group/btn mt-6">
-                    <span className="uppercase tracking-widest text-sm">Consultar Especialista</span>
+                  <button type="submit" className="w-full bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-5 rounded-2xl shadow-xl transition-all flex items-center justify-between px-8 group/btn mt-2">
+                    <span className="uppercase tracking-widest text-sm font-bold">INICIAR MINHA ANÁLISE</span>
                     <div className="bg-[#5D4017] text-[#EBCB8D] rounded-full p-2 group-hover/btn:scale-110 transition-transform shadow-inner">
                       <ArrowUpRight className="w-5 h-5" />
                     </div>
@@ -699,83 +735,6 @@ export default function App() {
                   <span>Sigilo garantido pela OAB</span>
                 </p>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-24 px-4 bg-white border-t border-gray-50">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="font-serif text-3xl md:text-5xl font-bold text-[#050C3B] mb-6">Como funciona?</h2>
-            <p className="text-gray-500 text-lg max-w-2xl mx-auto">Um processo simples, rápido e totalmente focado em garantir seus direitos.</p>
-          </div>
-
-          <div className="relative">
-            <div className="grid md:grid-cols-3 gap-8 relative z-10">
-              {/* Connecting Line (Fio Dourado) - Desktop only */}
-              <div className="hidden md:block absolute top-[40px] left-[15%] right-[15%] h-px bg-[#C9A44C]/30 z-0"></div>
-
-              {[
-                {
-                  num: "1",
-                  title: "Você preenche o formulário",
-                  desc: "Deixe seu nome, WhatsApp e responda 3 perguntas rápidas sobre sua situação."
-                },
-                {
-                  num: "2",
-                  title: "Te chamaremos no WhatsApp",
-                  desc: "Nossa equipe entra em contato pelo WhatsApp para fazer um diagnóstico do seu caso e calcular os valores."
-                },
-                {
-                  num: "3",
-                  title: "Orientação Jurídica",
-                  desc: "Você descobre se tem direito, quanto pode receber e os próximos passos.",
-                  highlight: true
-                }
-              ].map((step, i) => (
-                <div key={i} className={`relative flex flex-col items-center transition-all duration-700 ${step.highlight ? 'scale-105 md:scale-110 z-20' : 'opacity-80'}`}>
-                  <div className={`w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold mb-8 border-4 transition-all ${step.highlight ? 'bg-[#050C3B] text-white border-[#C9A44C] shadow-[0_0_30px_rgba(201,164,76,0.3)]' : 'bg-white text-[#050C3B] border-gray-100 shadow-sm'}`}>
-                    {step.num}
-                  </div>
-                  <div className={`p-10 rounded-[3rem] text-center w-full transition-all ${step.highlight ? 'bg-white shadow-[0_32px_64px_-16px_rgba(5,12,59,0.1)] border border-gray-50' : 'bg-gray-50/50'}`}>
-                    <h4 className={`font-serif text-xl font-bold mb-4 ${step.highlight ? 'text-[#050C3B]' : 'text-gray-800'}`}>
-                      {step.title}
-                    </h4>
-                    <p className="text-gray-500 text-sm md:text-base leading-relaxed font-medium">
-                      {step.desc}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Alerta de Prazo integrado como Disclaimer */}
-          <div className="mt-20 max-w-4xl mx-auto">
-            <div className="bg-[#B23333] rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 shadow-lg relative overflow-hidden group">
-              <div className="flex-shrink-0 relative">
-                <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-sm">
-                  <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                    <circle cx="12" cy="12" r="10" strokeOpacity="0.3" />
-                    <path d="M12 12L12 6" className="origin-[12px_12px] animate-[spin_4s_linear_infinite]" />
-                    <path d="M12 12L16 12" className="origin-[12px_12px] animate-[spin_15s_linear_infinite]" />
-                  </svg>
-                </div>
-                <div className="absolute inset-0 border-2 border-white/20 rounded-full animate-ping opacity-10"></div>
-              </div>
-              
-              <div className="text-center md:text-left">
-                <h3 className="text-white font-bold text-xl mb-1 flex items-center justify-center md:justify-start gap-2">
-                  Atenção: seu prazo está diminuindo.
-                </h3>
-                <p className="text-white/90 text-sm md:text-base leading-relaxed font-medium">
-                  A lei trabalhista estabelece um prazo para buscar seus direitos — e ele já está correndo desde a data da rescisão. Quanto antes você agir, mais opções você tem.
-                </p>
-              </div>
-
-              {/* Textura de fundo sutil */}
-              <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)] bg-[size:16px_16px]"></div>
             </div>
           </div>
         </div>
