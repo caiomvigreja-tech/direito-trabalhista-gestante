@@ -758,13 +758,22 @@ export default function App() {
       </section>
 
       {/* BLOCO FINAL: CONVERSÃO E GALERIA (Inspirado no screenshot - Refinado) */}
-      <section className="py-24 md:py-32 px-4 bg-white relative overflow-hidden">
+      <section className="py-24 md:py-32 px-4 relative overflow-hidden bg-[#020822]">
+        {/* Background Image - Without Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="/images/Edificio Lisboa2.webp" 
+            alt="Edifício Lisboa" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+
         <div className="max-w-7xl mx-auto text-center relative z-10">
           <div className="mb-10">
-            <h2 className="font-serif text-3xl md:text-5xl font-bold text-[#050C3B] mb-3 tracking-tight max-w-4xl mx-auto leading-tight text-pretty">
-              Consulte um <span className="highlight text-[#050C3B]">advogado de confiança</span> e descubra agora se você pode ter direito.
+            <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-3 tracking-tight max-w-4xl mx-auto leading-tight text-pretty">
+              Consulte um advogado de confiança e descubra agora se você pode ter direito.
             </h2>
-            <p className="text-gray-500 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-light">
+            <p className="text-white/70 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-light">
               Nossa equipe de especialistas está à disposição para analisar o seu caso.
             </p>
           </div>
@@ -772,31 +781,27 @@ export default function App() {
           <div className="mt-2 p-0 relative">
             {/* Floating Contact Card - Centered and Clean */}
             <div className="relative w-full max-w-2xl mx-auto px-4 z-20 animate-breathing">
-              <div className="bg-white border border-gray-100 shadow-[0_32px_64px_-16px_rgba(5,12,59,0.1)] rounded-[3rem] p-8 md:p-10 text-left">
+              <div className="bg-white border border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.4)] rounded-[3rem] p-8 md:p-10 text-left">
                 <div className="pt-2"></div>
                 
-                <form className="space-y-4" onSubmit={handleLeadCapture}>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <input 
-                        type="text" 
-                        className="w-full px-5 py-4 rounded-xl border border-gray-100 focus:ring-2 focus:ring-[#C9A44C] outline-none transition bg-gray-50 text-gray-800 placeholder:text-gray-400" 
-                        placeholder="Seu Nome" 
-                        value={formData.name}
-                        onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                        required 
-                      />
-                    </div>
-                    <div>
-                      <input 
-                        type="tel" 
-                        className="w-full px-5 py-4 rounded-xl border border-gray-100 focus:ring-2 focus:ring-[#C9A44C] outline-none transition bg-gray-50 text-gray-800 placeholder:text-gray-400" 
-                        placeholder="Seu WhatsApp" 
-                        value={formData.phone}
-                        onChange={handlePhoneChange}
-                        required 
-                      />
-                    </div>
+                <form className="space-y-4 max-w-md mx-auto" onSubmit={handleLeadCapture}>
+                  <div className="space-y-4">
+                    <input 
+                      type="text" 
+                      className="w-full px-5 py-5 rounded-xl border border-gray-100 focus:ring-2 focus:ring-[#C9A44C] outline-none transition bg-gray-50 text-gray-800 placeholder:text-gray-400 font-medium" 
+                      placeholder="Seu Nome" 
+                      value={formData.name}
+                      onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                      required 
+                    />
+                    <input 
+                      type="tel" 
+                      className="w-full px-5 py-5 rounded-xl border border-gray-100 focus:ring-2 focus:ring-[#C9A44C] outline-none transition bg-gray-50 text-gray-800 placeholder:text-gray-400 font-medium" 
+                      placeholder="Seu WhatsApp" 
+                      value={formData.phone}
+                      onChange={handlePhoneChange}
+                      required 
+                    />
                   </div>
                   <button type="submit" className="w-full bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-5 rounded-2xl shadow-xl transition-all flex items-center justify-between px-8 group/btn mt-2">
                     <span className="uppercase tracking-widest text-base font-bold">INICIAR MINHA ANÁLISE</span>
@@ -821,7 +826,7 @@ export default function App() {
 
 
 
-      <footer className="bg-[#030722] text-gray-400 py-20 px-4 border-t border-white/5">
+      <footer className="bg-[#020822] text-white/60 py-16 px-4 border-t border-white/5 relative overflow-hidden">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
             {/* Escritório */}
