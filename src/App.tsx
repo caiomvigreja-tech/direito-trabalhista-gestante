@@ -46,6 +46,15 @@ export default function App() {
   const [formData, setFormData] = useState({ name: '', phone: '' });
   const [showVideo, setShowVideo] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (showVideo) {
@@ -85,7 +94,7 @@ export default function App() {
       privacy: {
         title: "Política de Privacidade",
         content: (
-          <div className="space-y-4 text-gray-600 leading-relaxed text-sm">
+          <div className="space-y-4 text-gray-600 leading-relaxed text-base">
             <p className="font-bold text-[#050C3B]">1. Coleta de Dados</p>
             <p>Coletamos seu nome e WhatsApp exclusivamente para realizar o atendimento solicitado sobre direitos trabalhistas de gestantes.</p>
             <p className="font-bold text-[#050C3B]">2. Uso e Finalidade</p>
@@ -100,7 +109,7 @@ export default function App() {
       terms: {
         title: "Termos de Uso",
         content: (
-          <div className="space-y-4 text-gray-600 leading-relaxed text-sm">
+          <div className="space-y-4 text-gray-600 leading-relaxed text-base">
             <p className="font-bold text-[#050C3B]">1. Natureza Informativa</p>
             <p>O conteúdo deste site tem caráter meramente informativo e educacional. As informações aqui contidas não substituem um parecer jurídico individualizado.</p>
             <p className="font-bold text-[#050C3B]">2. Inexistência de Vínculo Contratual</p>
@@ -113,7 +122,7 @@ export default function App() {
       ethics: {
         title: "Ética e Compliance",
         content: (
-          <div className="space-y-4 text-gray-600 leading-relaxed text-sm">
+          <div className="space-y-4 text-gray-600 leading-relaxed text-base">
             <p className="font-bold text-[#050C3B]">1. Compromisso Ético</p>
             <p>Atuamos em total conformidade com o Estatuto da Advocacia e o Código de Ética e Disciplina da OAB/RJ.</p>
             <p className="font-bold text-[#050C3B]">2. Transparência</p>
@@ -197,6 +206,41 @@ export default function App() {
 
   return (
     <div className="font-sans text-gray-800 bg-white selection:bg-[#C9A44C] selection:text-[#050C3B]">
+      {/* HEADER DINÂMICO */}
+      <header className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${isScrolled ? 'bg-[#050C3B]/95 backdrop-blur-md py-4 shadow-2xl border-b border-white/5' : 'bg-transparent py-8'}`}>
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+          <div className="flex items-center gap-5 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <img 
+              src="/images/logo-branco-fundo-transparente.png" 
+              alt="Filipe Cunha Advocacia Logo" 
+              className={`h-10 md:h-12 w-auto object-contain transition-all duration-500 ${isScrolled ? 'scale-95' : 'scale-100'}`} 
+            />
+            <div className="hidden md:flex flex-col justify-center">
+              <div className="flex items-center gap-1.5">
+                <span className="text-white font-bold text-sm md:text-base">Dr. Filipe Cunha</span>
+                <span className="text-white/70 text-[10px] md:text-xs">• OAB/RJ 221.727</span>
+              </div>
+              <span className="text-white/40 text-[10px] md:text-xs font-medium">Advogado da Gestante</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-12">
+            <nav className="hidden lg:flex items-center gap-10">
+              <button onClick={() => document.getElementById('direitos')?.scrollIntoView({ behavior: 'smooth' })} className="text-white/80 hover:text-[#C9A44C] font-bold text-[10px] uppercase tracking-[0.25em] transition-all">TENHO DIREITO?</button>
+              <button onClick={() => calcRef.current?.scrollIntoView({ behavior: 'smooth' })} className="text-white/80 hover:text-[#C9A44C] font-bold text-[10px] uppercase tracking-[0.25em] transition-all">CÁLCULO</button>
+              <button onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })} className="text-white/80 hover:text-[#C9A44C] font-bold text-[10px] uppercase tracking-[0.25em] transition-all">DÚVIDAS</button>
+            </nav>
+            
+            <button 
+              onClick={scrollToContact}
+              className="bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] px-6 py-3 rounded-full font-bold text-[10px] md:text-[11px] uppercase tracking-[0.2em] transition-all shadow-lg hidden sm:block active:scale-95 hover:scale-105"
+            >
+              INICIAR MINHA ANÁLISE
+            </button>
+          </div>
+        </div>
+      </header>
+
       {/* BLOCO 1: HERO + FORMULÁRIO */}
       <section className="relative overflow-hidden flex items-center bg-[#F8F9FA] min-h-[85vh] md:min-h-[95vh]">
         {/* Background Image and Overlay */}
@@ -211,10 +255,7 @@ export default function App() {
 
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10 pt-12 pb-24 md:py-32 lg:py-40 px-4 w-full">
           {/* Glassmorphism Container */}
-          <div className="space-y-5 md:space-y-6 text-white text-center md:text-left bg-white/10 backdrop-blur-md border border-white/20 rounded-[2rem] p-5 sm:p-8 md:p-12 shadow-2xl">
-            <div className="flex justify-center md:justify-start text-[#C9A44C] font-bold tracking-[0.2em] text-[0.7rem] xs:text-xs md:text-sm uppercase">
-              <span>Advogado da Gestante · Todo o Brasil</span>
-            </div>
+          <div id="contact-form" className="scroll-mt-24 md:scroll-mt-32 space-y-5 md:space-y-6 text-white text-center md:text-left bg-white/10 backdrop-blur-md border border-white/20 rounded-[2rem] p-5 sm:p-8 md:p-12 shadow-2xl">
             <h1 className="font-serif text-[1.75rem] sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight tracking-tight">
               Foi demitida grávida?
             </h1>
@@ -222,7 +263,7 @@ export default function App() {
               Em muitos casos, a lei garante indenização. O valor pode superar R$ 20 mil em salários e benefícios, sem a obrigação de retornar à empresa.
             </p>
             
-            <div id="contact-form" className="max-w-md mx-auto md:mx-0 w-full mt-8 md:mt-10 text-left">
+            <div className="max-w-md mx-auto md:mx-0 w-full mt-8 md:mt-10 text-left">
               <form className="space-y-4" onSubmit={handleLeadCapture}>
                 <div>
                   <input 
@@ -245,11 +286,15 @@ export default function App() {
                   />
                 </div>
                 <button type="submit" className="w-full bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-6 rounded-full shadow-lg transform transition hover:-translate-y-1 flex items-center justify-between group mt-2">
-                  <span className="flex-grow text-center ml-8">Quero saber se tenho direito</span>
+                  <span className="flex-grow text-center ml-8 uppercase font-bold tracking-widest text-base">INICIAR MINHA ANÁLISE</span>
                   <div className="bg-white rounded-full p-2 flex items-center justify-center shadow-sm group-hover:bg-[#5D4017] group-hover:text-white transition-all">
                     <ArrowUpRight className="w-5 h-5" />
                   </div>
                 </button>
+                <div className="mt-4 flex items-center justify-center gap-2 text-[11px] font-bold tracking-[0.2em] uppercase text-white/50">
+                  <Globe className="w-3.5 h-3.5 text-[#C9A44C]" />
+                  <span>Atendimento rápido para todo o Brasil</span>
+                </div>
               </form>
             </div>
           </div>
@@ -257,13 +302,22 @@ export default function App() {
           <div className="hidden lg:block relative h-full min-h-[500px] w-full">
             {/* Indenização Garantida - Superior Direita */}
             {/* Indenização Garantida - Superior Direita */}
-            <div className="absolute top-[36%] left-[42%] animate-float bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.4)] flex items-center gap-5 z-20 w-[410px]">
+            <div className="absolute top-[31%] left-[17%] animate-float bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.4)] flex items-center gap-5 z-20 w-[410px]">
               <div className="bg-[#C9A44C] rounded-full p-3 shadow-lg shrink-0">
                 <ShieldCheck className="w-7 h-7 text-[#050C3B]" />
               </div>
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1.5">
                 <span className="text-white font-bold text-base tracking-tight leading-tight">Indenização por estabilidade</span>
-                <span className="text-white/80 font-medium text-sm mt-0.5">Pagamento de salários e verbas, sem a obrigação de retornar à empresa.</span>
+                <ul className="text-white/80 font-medium text-[15px] space-y-1">
+                  <li className="flex items-center gap-2">
+                    <div className="w-1 h-1 bg-[#C9A44C] rounded-full"></div>
+                    Pagamento de salários e verbas
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1 h-1 bg-[#C9A44C] rounded-full"></div>
+                    Sem obrigação de retornar à empresa.
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -275,10 +329,10 @@ export default function App() {
       </section>
 
       {/* BLOCO 2: QUEM TEM DIREITO */}
-      <section className="pt-24 pb-0 px-4 bg-[#F8F9FA]">
+      <section id="direitos" className="pt-24 pb-0 px-4 bg-[#F8F9FA]">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#050C3B] mb-4">Quem tem direito à estabilidade?</h2>
+            <h2 className="font-serif text-3xl md:text-5xl font-bold text-[#050C3B] mb-4">Quem tem direito à estabilidade?</h2>
             <p className="text-lg text-gray-600 max-w-4xl mx-auto font-light leading-relaxed">
               A lei protege a gestante do <span className="highlight font-medium text-gray-800">início da gravidez</span> até <span className="highlight font-medium text-gray-800">5 meses após o nascimento</span> do bebê.
             </p>
@@ -316,11 +370,11 @@ export default function App() {
                   {item.icon}
                 </div>
                 <h4 className="font-sans font-bold text-[#050C3B] text-xl mb-4 leading-tight">{item.title}</h4>
-                <p className="text-gray-600 leading-relaxed text-[15px] font-light">{item.desc}</p>
+                <p className="text-gray-600 leading-relaxed text-base font-light">{item.desc}</p>
                 {item.note && (
                   <div className="mt-5 pt-4 border-t border-gray-50 flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-[#C9A44C]"></div>
-                    <span className="text-[10px] text-gray-400 uppercase tracking-[0.2em] font-bold font-sans">{item.note}</span>
+                    <span className="text-[13px] text-gray-400 uppercase font-bold font-sans">{item.note}</span>
                   </div>
                 )}
               </div>
@@ -332,11 +386,15 @@ export default function App() {
               onClick={scrollToContact}
               className="w-full md:w-auto bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-8 rounded-full shadow-xl transform transition hover:-translate-y-1 inline-flex items-center justify-between group"
             >
-              <span className="mr-6">Quero saber se tenho direito</span>
+              <span className="mr-6 uppercase font-bold tracking-widest text-base">INICIAR MINHA ANÁLISE</span>
               <div className="bg-white rounded-full p-2 flex items-center justify-center shadow-sm group-hover:bg-[#5D4017] group-hover:text-white transition-all">
                 <ArrowUpRight className="w-5 h-5" />
               </div>
             </button>
+            <div className="mt-4 flex items-center justify-center gap-2 text-[11px] font-bold tracking-[0.2em] uppercase text-gray-400">
+              <Globe className="w-3.5 h-3.5 text-[#C9A44C]" />
+              <span>Atendimento rápido para todo o Brasil</span>
+            </div>
           </div>
         </div>
       </section>
@@ -353,8 +411,8 @@ export default function App() {
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#050C3B] text-[#C9A44C] mb-8 shadow-lg">
                 <Calculator className="w-8 h-8" />
               </div>
-              <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#050C3B] mb-4 uppercase tracking-tight">Exemplo de Cálculo</h2>
-              <h3 className="font-sans text-xl text-gray-600 mb-8 font-medium">Entenda o que compõe a indenização</h3>
+              <h2 className="font-serif text-3xl md:text-5xl font-bold text-[#050C3B] mb-4 uppercase tracking-tight">Exemplo de Cálculo</h2>
+              <h3 className="font-sans text-xl text-gray-600 mb-8 font-medium">Entenda o que compõe uma indenização</h3>
               <p className="text-gray-600 mb-8 bg-[#F2F2F2] p-4 rounded-xl border-l-4 border-[#050C3B]">
                 Para uma trabalhadora com salário de 
                 <span className="relative inline-block px-1 ml-1 cursor-default group/price">
@@ -393,9 +451,14 @@ export default function App() {
                   <span className="text-xl font-bold">Total estimado</span>
                   <span className="text-3xl font-black text-[#C9A44C]">R$ 25.412,00</span>
                 </div>
-                <p className="text-gray-600 text-sm italic font-light mt-6 text-center">
-                  Exemplo hipotético com fins informativos. O valor real depende do salário, tempo de gestação e circunstâncias do caso.
-                </p>
+                <div className="mt-6 text-center space-y-2 max-w-lg mx-auto border-t border-gray-50 pt-5">
+                  <p className="text-[#050C3B]/60 text-[11px] font-bold uppercase tracking-[0.2em]">
+                    Exemplo hipotético com fins informativos.
+                  </p>
+                  <p className="text-gray-400 text-sm italic font-light leading-relaxed">
+                    O valor real depende de uma análise criteriosa do salário, do tempo de gestação e de circunstâncias específicas do caso.
+                  </p>
+                </div>
               </div>
             </div>
             {/* Watermark for the card */}
@@ -410,20 +473,24 @@ export default function App() {
               onClick={scrollToContact}
               className="w-full md:w-auto bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-8 rounded-full shadow-xl transform transition hover:-translate-y-1 inline-flex items-center justify-between group"
             >
-              <span className="mr-6">Quero saber se tenho direito</span>
+              <span className="mr-6 uppercase font-bold tracking-widest text-base">INICIAR MINHA ANÁLISE</span>
               <div className="bg-white rounded-full p-2 flex items-center justify-center shadow-sm group-hover:bg-[#5D4017] group-hover:text-white transition-all">
                 <ArrowUpRight className="w-5 h-5" />
               </div>
             </button>
+            <div className="mt-4 flex items-center justify-center gap-2 text-[11px] font-bold tracking-[0.2em] uppercase text-gray-400">
+              <Globe className="w-3.5 h-3.5 text-[#C9A44C]" />
+              <span>Atendimento rápido para todo o Brasil</span>
+            </div>
           </div>
         </div>
       </section>
 
       {/* BLOCO 4: MATÉRIA JORNALÍSTICA */}
-      <section className="py-24 px-4 bg-white overflow-hidden relative">
+      <section id="midia" className="py-24 px-4 bg-white overflow-hidden relative">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12 px-4 max-w-4xl mx-auto">
-            <span className="text-[#A6822E] font-bold tracking-[0.2em] uppercase text-xs mb-3 block">Repercussão na Mídia Nacional</span>
+            <span className="text-[#A6822E] font-bold tracking-[0.2em] uppercase text-base mb-3 block">Repercussão na Mídia Nacional</span>
             <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-[#050C3B] leading-tight text-pretty">
               "Grávidas têm direito à indenização se forem demitidas", reafirma STF
             </h2>
@@ -474,7 +541,7 @@ export default function App() {
                 ].map((item, idx) => (
                   <li key={idx} className="flex items-start gap-4">
                     <div className="mt-1.5 w-2 h-2 rounded-full bg-[#C9A44C] shrink-0"></div>
-                    <span className="text-[#050C3B] text-sm md:text-base font-semibold leading-tight">{item}</span>
+                    <span className="text-[#050C3B] text-base font-semibold leading-tight">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -486,11 +553,15 @@ export default function App() {
               onClick={scrollToContact}
               className="w-full md:w-auto bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-8 rounded-full shadow-xl transform transition hover:-translate-y-1 inline-flex items-center justify-between group"
             >
-              <span className="mr-6">Quero saber se tenho direito</span>
+              <span className="mr-6 uppercase font-bold tracking-widest text-base">INICIAR MINHA ANÁLISE</span>
               <div className="bg-white rounded-full p-2 flex items-center justify-center shadow-sm group-hover:bg-[#5D4017] group-hover:text-white transition-all">
                 <ArrowUpRight className="w-5 h-5" />
               </div>
             </button>
+            <div className="mt-4 flex items-center justify-center gap-2 text-[11px] font-bold tracking-[0.2em] uppercase text-gray-400">
+              <Globe className="w-3.5 h-3.5 text-[#C9A44C]" />
+              <span>Atendimento rápido para todo o Brasil</span>
+            </div>
           </div>
         </div>
       </section>
@@ -533,15 +604,15 @@ export default function App() {
               </div>
             </div>
             <div className="md:w-3/5 p-10 md:p-14 flex flex-col justify-center">
-              <h4 className="text-[#C9A44C] font-bold tracking-[0.2em] uppercase text-sm mb-3">Quem vai cuidar do seu caso</h4>
+              <h4 className="text-[#C9A44C] font-bold tracking-[0.2em] uppercase text-base mb-3">Quem vai cuidar do seu caso</h4>
               <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#050C3B] mb-2">Dr. Filipe Cunha</h2>
               <p className="text-gray-600 mb-8 font-medium text-lg leading-relaxed">Advogado Trabalhista · OAB/RJ Nº 221.727</p>
 
               <div className="flex flex-wrap gap-3 mb-10">
-                <span className="bg-[#050C3B]/5 text-[#050C3B] px-4 py-1.5 rounded-full text-sm font-semibold border border-[#050C3B]/10">+ 12 anos de experiência</span>
-                <span className="bg-[#050C3B]/5 text-[#050C3B] px-4 py-1.5 rounded-full text-sm font-semibold border border-[#050C3B]/10">Delegado de Prerrogativas</span>
-                <span className="bg-[#050C3B]/5 text-[#050C3B] px-4 py-1.5 rounded-full text-sm font-semibold border border-[#050C3B]/10">Comissão da OAB/RJ</span>
-                <span className="bg-[#C9A44C]/10 text-[#C9A44C] px-4 py-1.5 rounded-full text-sm font-semibold border border-[#C9A44C]/20">Advogado da Gestante</span>
+                <span className="bg-[#050C3B]/5 text-[#050C3B] px-4 py-1.5 rounded-full text-base font-semibold border border-[#050C3B]/10">+ 12 anos de experiência</span>
+                <span className="bg-[#050C3B]/5 text-[#050C3B] px-4 py-1.5 rounded-full text-base font-semibold border border-[#050C3B]/10">Delegado de Prerrogativas</span>
+                <span className="bg-[#050C3B]/5 text-[#050C3B] px-4 py-1.5 rounded-full text-base font-semibold border border-[#050C3B]/10">Comissão da OAB/RJ</span>
+                <span className="bg-[#C9A44C]/10 text-[#C9A44C] px-4 py-1.5 rounded-full text-base font-semibold border border-[#C9A44C]/20">Advogado da Gestante</span>
               </div>
 
               <div className="space-y-6 text-gray-600 leading-relaxed text-lg font-light">
@@ -551,7 +622,7 @@ export default function App() {
                 <div className="pt-8 border-t border-gray-100 mt-10 relative">
                   <Quote className="absolute -top-4 -left-2 w-10 h-10 text-[#C9A44C]/20" />
                   <p className="font-serif font-bold text-[#050C3B] text-2xl italic leading-tight pl-6 border-l-4 border-[#C9A44C]">
-                    "Muitas mulheres que atendo acham que já perderam o direito. Na maioria dos casos, ainda não perderam. É importante agir rápido."
+                    "Muitas mulheres que atendo acham que perderam o direito. Na maioria dos casos, não perderam. É importante agir rápido."
                   </p>
                 </div>
               </div>
@@ -563,20 +634,24 @@ export default function App() {
               onClick={scrollToContact}
               className="w-full md:w-auto bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-8 rounded-full shadow-xl transform transition hover:-translate-y-1 inline-flex items-center justify-between group"
             >
-              <span className="mr-6">Quero saber se tenho direito</span>
+              <span className="mr-6 uppercase font-bold tracking-widest text-base">INICIAR MINHA ANÁLISE</span>
               <div className="bg-white rounded-full p-2 flex items-center justify-center shadow-sm group-hover:bg-[#5D4017] group-hover:text-white transition-all">
                 <ArrowUpRight className="w-5 h-5" />
               </div>
             </button>
+            <div className="mt-4 flex items-center justify-center gap-2 text-[11px] font-bold tracking-[0.2em] uppercase text-gray-400">
+              <Globe className="w-3.5 h-3.5 text-[#C9A44C]" />
+              <span>Atendimento rápido para todo o Brasil</span>
+            </div>
           </div>
         </div>
       </section>
 
       {/* BLOCO 6: FAQ */}
-      <section className="py-24 px-4 bg-white overflow-hidden relative border-y border-gray-50">
+      <section id="faq" className="py-24 px-4 bg-white overflow-hidden relative border-y border-gray-50">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16 px-4">
-            <span className="text-[#A6822E] font-bold tracking-[0.2em] uppercase text-xs mb-3 block">Dúvidas Frequentes</span>
+            <span className="text-[#A6822E] font-bold tracking-[0.2em] uppercase text-base mb-3 block">Dúvidas Frequentes</span>
             <h2 className="font-serif text-3xl md:text-5xl font-bold text-[#050C3B]">
               Perguntas e Respostas
             </h2>
@@ -635,11 +710,15 @@ export default function App() {
               onClick={scrollToContact}
               className="w-full md:w-auto bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-10 rounded-full shadow-xl transform transition hover:-translate-y-1 inline-flex items-center justify-between group"
             >
-              <span className="mr-8">Quero saber se tenho direito</span>
+              <span className="mr-8 uppercase font-bold tracking-widest text-base">INICIAR MINHA ANÁLISE</span>
               <div className="bg-white rounded-full p-2 flex items-center justify-center shadow-sm group-hover:bg-[#5D4017] group-hover:text-white transition-all">
                 <ArrowUpRight className="w-5 h-5" />
               </div>
             </button>
+            <div className="mt-4 flex items-center justify-center gap-2 text-[11px] font-bold tracking-[0.2em] uppercase text-gray-400">
+              <Globe className="w-3.5 h-3.5 text-[#C9A44C]" />
+              <span>Atendimento rápido para todo o Brasil</span>
+            </div>
           </div>
         </div>
       </section>
@@ -650,7 +729,7 @@ export default function App() {
 
       {/* BLOCO FINAL: CONVERSÃO E GALERIA (Inspirado no screenshot - Refinado) */}
       {/* Alerta de Prazo finalizado (Bloco Todo Vermelho Elegante) */}
-      <section className="py-20 px-4 bg-[#7A2D2B] text-white relative overflow-hidden">
+      <section className="py-20 px-4 bg-[#b25553] text-white relative overflow-hidden">
         <div className="max-w-4xl mx-auto text-center flex flex-col items-center relative z-10">
           {/* Clock Icon Block */}
           <div className="mb-8 relative">
@@ -664,16 +743,13 @@ export default function App() {
             <div className="absolute inset-0 border-4 border-white/10 rounded-full animate-ping opacity-20"></div>
           </div>
           
-          <h3 className="font-serif text-2xl md:text-3xl font-bold mb-4 tracking-tight">
+          <h2 className="font-serif text-3xl md:text-5xl font-bold mb-4 tracking-tight">
             Atenção: seu prazo está diminuindo.
-          </h3>
-          <div className="max-w-2xl mx-auto space-y-4">
-            <p className="text-white/80 text-base md:text-lg leading-relaxed font-light">
-              A lei trabalhista estabelece um prazo para buscar seus direitos — que começou a correr na data da demissão.
+          </h2>
+          <div className="max-w-2xl mx-auto">
+            <p className="text-white font-medium text-base md:text-lg leading-relaxed">
+              A lei trabalhista estabelece um prazo; que começou a correr na data da demissão - quanto antes você agir, mais chances (Art. 11 da CLT).
             </p>
-            <div className="text-white font-bold text-lg md:text-xl border-t border-white/10 pt-6 inline-block w-full">
-              Quanto antes você agir, mais chances você tem.
-            </div>
           </div>
         </div>
 
@@ -686,7 +762,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto text-center relative z-10">
           <div className="mb-10">
             <h2 className="font-serif text-3xl md:text-5xl font-bold text-[#050C3B] mb-3 tracking-tight max-w-4xl mx-auto leading-tight text-pretty">
-              Consulte um <span className="text-[#C9A44C]">advogado de confiança</span> e descubra agora se você pode ter direito.
+              Consulte um <span className="highlight text-[#050C3B]">advogado de confiança</span> e descubra agora se você pode ter direito.
             </h2>
             <p className="text-gray-500 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-light">
               Nossa equipe de especialistas está à disposição para analisar o seu caso.
@@ -723,17 +799,18 @@ export default function App() {
                     </div>
                   </div>
                   <button type="submit" className="w-full bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-5 rounded-2xl shadow-xl transition-all flex items-center justify-between px-8 group/btn mt-2">
-                    <span className="uppercase tracking-widest text-sm font-bold">INICIAR MINHA ANÁLISE</span>
+                    <span className="uppercase tracking-widest text-base font-bold">INICIAR MINHA ANÁLISE</span>
                     <div className="bg-[#5D4017] text-[#EBCB8D] rounded-full p-2 group-hover/btn:scale-110 transition-transform shadow-inner">
                       <ArrowUpRight className="w-5 h-5" />
                     </div>
                   </button>
+                  <div className="mt-4 flex items-center justify-center gap-2 text-[11px] font-bold tracking-[0.2em] uppercase text-gray-400">
+                    <Globe className="w-3.5 h-3.5 text-[#C9A44C]" />
+                    <span>Atendimento rápido para todo o Brasil</span>
+                  </div>
                 </form>
                 
-                <p className="text-[10px] text-gray-400 mt-6 text-center uppercase tracking-widest flex items-center justify-center space-x-2">
-                  <ShieldCheck className="w-3 h-3 text-[#3E9B77]" />
-                  <span>Sigilo garantido pela OAB</span>
-                </p>
+
               </div>
             </div>
           </div>
@@ -753,7 +830,7 @@ export default function App() {
               <div className="space-y-2">
                 <p className="text-white font-bold text-lg">Filipe Cunha Advocacia</p>
                 <p className="text-sm leading-relaxed text-gray-400">Especialista em Direito do Trabalho para Gestantes. Defendendo seu futuro e o do seu bebê.</p>
-                <p className="text-xs opacity-60">CNPJ: 46.494.521/0001-43</p>
+                <p className="text-sm opacity-60">CNPJ: 46.494.521/0001-43</p>
               </div>
             </div>
 
@@ -783,7 +860,7 @@ export default function App() {
                 <li><button onClick={() => openLegalModal('privacy')} className="hover:text-[#C9A44C] transition-colors text-sm text-left">Política de Privacidade</button></li>
                 <li><button onClick={() => openLegalModal('terms')} className="hover:text-[#C9A44C] transition-colors text-sm text-left">Termos de Uso</button></li>
                 <li><button onClick={() => openLegalModal('ethics')} className="hover:text-[#C9A44C] transition-colors text-sm text-left">Ética e Compliance</button></li>
-                <li className="text-xs pt-2">Dr. Filipe Cunha · OAB/RJ Nº 221.727</li>
+                <li className="text-sm pt-2">Dr. Filipe Cunha · OAB/RJ Nº 221.727</li>
               </ul>
             </div>
 
@@ -794,7 +871,7 @@ export default function App() {
           </div>
 
           <div className="pt-8 border-t border-white/5 text-center space-y-4">
-            <p className="text-xs opacity-50 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-sm opacity-50 max-w-2xl mx-auto leading-relaxed">
               © {new Date().getFullYear()} Filipe Cunha Advocacia. Todos os direitos reservados. 
               Este site tem caráter meramente informativo e não constitui consulta ou promessa de resultado.
             </p>
@@ -815,12 +892,12 @@ export default function App() {
                     {currentSurveyStep === 3 && <Calculator className="w-6 h-6 text-[#C9A44C]" />}
                   </div>
                   <h4 className="text-[#050C3B] font-serif text-2xl font-bold mb-1">Falta muito pouco</h4>
-                  <p className="text-gray-400 text-sm font-medium">Sua análise técnica está sendo preparada.</p>
+                  <p className="text-gray-400 text-base font-medium">Sua análise técnica está sendo preparada.</p>
                 </div>
 
                 {/* Barra de Progresso Estilizada */}
                 <div className="flex items-center gap-3 mb-12">
-                  <span className="text-[10px] font-black text-[#050C3B]/30 uppercase tracking-[0.2em]">{currentSurveyStep}/3</span>
+                  <span className="text-base font-black text-[#050C3B]/30 uppercase tracking-[0.2em]">{currentSurveyStep}/3</span>
                   <div className="flex-grow flex gap-1.5">
                     {[1, 2, 3].map((step) => (
                       <div 
@@ -941,7 +1018,7 @@ export default function App() {
             </p>
             <button 
               onClick={() => setIsThankYouOpen(false)}
-              className="mt-12 w-full py-5 rounded-2xl border border-white/20 text-white font-bold hover:bg-white/10 transition-colors uppercase tracking-widest text-sm"
+              className="mt-12 w-full py-5 rounded-2xl border border-white/20 text-white font-bold hover:bg-white/10 transition-colors uppercase tracking-widest text-base"
             >
               Ok, entendi
             </button>
@@ -977,7 +1054,7 @@ export default function App() {
             
             <button 
               onClick={() => setLegalModal(null)}
-              className="mt-8 w-full bg-gray-50 text-[#050C3B] font-bold py-4 rounded-xl hover:bg-gray-100 transition-colors uppercase tracking-widest text-xs"
+              className="mt-8 w-full bg-gray-50 text-[#050C3B] font-bold py-4 rounded-xl hover:bg-gray-100 transition-colors uppercase tracking-widest text-base"
             >
               Fechar
             </button>
