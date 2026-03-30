@@ -4,4 +4,33 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-draw-circle: drawCircle 1.5s ease-out forwards;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes drawCircle {
+    from { stroke-dashoffset: 300; }
+    to { stroke-dashoffset: 0; }
+  }
+}
+
+.stroke-draw {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+}
+
+.delay-500 { animation-delay: 500ms; }
+.delay-1000 { animation-delay: 1000ms; }
+.delay-1500 { animation-delay: 1500ms; }
+
+.highlight {
+  display: inline-block;
+  background: linear-gradient(104deg, rgba(201, 164, 76, 0.15) 0.9%, rgba(201, 164, 76, 0.25) 2.4%, rgba(201, 164, 76, 0.2) 5.8%, rgba(201, 164, 76, 0.1) 93%, rgba(201, 164, 76, 0.2) 96%, rgba(201, 164, 76, 0.15) 98%), linear-gradient(183deg, rgba(201, 164, 76, 0.15) 0%, rgba(201, 164, 76, 0.2) 7.9%, rgba(201, 164, 76, 0) 15%);
+  padding: 0 4px;
+  border-radius: 2px;
 }

@@ -1,10 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
+// @ts-ignore
+import Plyr from 'plyr';
+import 'plyr/dist/plyr.css';
 import { 
   CheckCircle2, 
   ChevronRight, 
   AlertCircle, 
   Calculator, 
-  ArrowRight, 
+  ArrowUpRight,
   PlayCircle,
   LogOut,
   Info,
@@ -20,7 +23,10 @@ import {
   MapPin,
   Globe,
   Scale,
-  X
+  X,
+  Play,
+  Quote,
+  Clock
 } from 'lucide-react';
 
 export default function App() {
@@ -36,6 +42,36 @@ export default function App() {
 
   // Estados para Modal Legal
   const [legalModal, setLegalModal] = useState<{ isOpen: boolean, title: string, content: React.ReactNode } | null>(null);
+  const [formData, setFormData] = useState({ name: '', phone: '' });
+  const [showVideo, setShowVideo] = useState(false);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (showVideo) {
+      const player = new Plyr('.js-plyr', {
+        controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+        youtube: { noCookie: true, rel: 0, showinfo: 0, iv_load_policy: 3, modestbranding: 1 }
+      });
+      return () => {
+        if (player) player.destroy();
+      };
+    }
+  }, [showVideo]);
+
+  const maskPhone = (value: string) => {
+    const numbers = value.replace(/\D/g, '');
+    if (numbers.length <= 11) {
+      return numbers
+        .replace(/(\d{2})(\d)/, "($1) $2")
+        .replace(/(\d{5})(\d)/, "$1-$2")
+        .replace(/(-\d{4})\d+?$/, "$1");
+    }
+    return value.slice(0, 15);
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({ ...prev, phone: maskPhone(e.target.value) }));
+  };
 
   const openLegalModal = (type: 'privacy' | 'terms' | 'ethics') => {
     const content = {
@@ -72,7 +108,7 @@ export default function App() {
         content: (
           <div className="space-y-4 text-gray-600 leading-relaxed text-sm">
             <p className="font-bold text-[#050C3B]">1. Compromisso Ético</p>
-            <p>Atuamos em total conformidade com o Estatuto da Advocacia e o Código de Ética e Disciplina da OAB.</p>
+            <p>Atuamos em total conformidade com o Estatuto da Advocacia e o Código de Ética e Disciplina da OAB/RJ.</p>
             <p className="font-bold text-[#050C3B]">2. Transparência</p>
             <p>Prezamos pela clareza absoluta nas informações prestadas, garantindo que a cliente compreenda todos os seus direitos e as etapas de um possível processo.</p>
             <p className="font-bold text-[#050C3B]">3. Sigilo Profissional</p>
@@ -155,48 +191,74 @@ export default function App() {
   return (
     <div className="font-sans text-gray-800 bg-white selection:bg-[#C9A44C] selection:text-[#050C3B]">
       {/* BLOCO 1: HERO + FORMULÁRIO */}
-      <section className="relative overflow-hidden flex items-center">
-        {/* Background Image */}
+      <section className="relative overflow-hidden flex items-center bg-[#F8F9FA] min-h-[85vh] md:min-h-[95vh]">
+        {/* Background Image and Overlay */}
         <div className="absolute inset-0 z-0">
           <img
-            src="/images/hero_bg.jpg"
+            src="/images/Fundo BG.webp"
             alt="Fundo Gestante"
             className="w-full h-full object-cover object-center"
           />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#050C3B]/60 via-[#050C3B]/30 to-transparent"></div>
         </div>
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center relative z-10 py-24 md:py-40 px-4 w-full">
-          <div className="space-y-6 text-white text-center md:text-left">
-            <div className="flex items-center justify-center md:justify-start space-x-2 text-[#C9A44C] font-semibold tracking-wider text-sm uppercase">
-              <Scale className="w-4 h-4" />
+
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10 pt-12 pb-24 md:py-32 lg:py-40 px-4 w-full">
+          {/* Glassmorphism Container */}
+          <div className="space-y-5 md:space-y-6 text-white text-center md:text-left bg-white/10 backdrop-blur-md border border-white/20 rounded-[2rem] p-5 sm:p-8 md:p-12 shadow-2xl">
+            <div className="flex justify-center md:justify-start text-[#C9A44C] font-bold tracking-[0.2em] text-[0.7rem] xs:text-xs md:text-sm uppercase">
               <span>Advogado da Gestante · Todo o Brasil</span>
             </div>
-            <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-              Foi demitida grávida? Você pode ter direito a uma boa indenização.
+            <h1 className="font-serif text-[1.75rem] sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight tracking-tight">
+              Foi demitida grávida?
             </h1>
-            <p className="text-lg md:text-xl text-gray-300 font-light">
-              A lei garante salários do período de estabilidade, FGTS, férias e 13º. Em muitos casos, o valor ultrapassa R$ 20.000,00. Independente de como foi a demissão.
+            <p className="text-[1.05rem] md:text-xl text-gray-300 font-light leading-relaxed text-pretty">
+              Em muitos casos, a lei garante indenização. O valor pode superar R$ 20 mil em salários e benefícios, sem a obrigação de retornar à empresa.
             </p>
+            
+            <div id="contact-form" className="max-w-md mx-auto md:mx-0 w-full mt-8 md:mt-10 text-left">
+              <form className="space-y-4" onSubmit={handleLeadCapture}>
+                <div>
+                  <input 
+                    type="text" 
+                    className="w-full px-5 py-4 rounded-xl border-none focus:ring-2 focus:ring-[#EBCB8D] outline-none transition bg-white text-gray-800 placeholder:text-gray-400 shadow-md" 
+                    placeholder="Seu Nome" 
+                    value={formData.name}
+                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                    required 
+                  />
+                </div>
+                <div>
+                  <input 
+                    type="tel" 
+                    className="w-full px-5 py-4 rounded-xl border-none focus:ring-2 focus:ring-[#EBCB8D] outline-none transition bg-white text-gray-800 placeholder:text-gray-400 shadow-md" 
+                    placeholder="Seu WhatsApp" 
+                    value={formData.phone}
+                    onChange={handlePhoneChange}
+                    required 
+                  />
+                </div>
+                <button type="submit" className="w-full bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-6 rounded-full shadow-lg transform transition hover:-translate-y-1 flex items-center justify-between group mt-2">
+                  <span className="flex-grow text-center ml-8">Quero saber se tenho direito</span>
+                  <div className="bg-white rounded-full p-2 flex items-center justify-center shadow-sm group-hover:bg-[#5D4017] group-hover:text-white transition-all">
+                    <ArrowUpRight className="w-5 h-5" />
+                  </div>
+                </button>
+              </form>
+            </div>
           </div>
-
-          <div id="contact-form" className="bg-white rounded-2xl p-6 md:p-8 shadow-2xl text-gray-800 max-w-md mx-auto w-full border border-gray-100">
-            <h3 className="font-serif text-2xl font-bold text-[#050C3B] mb-6 text-center">Fale com um especialista</h3>
-            <form className="space-y-4" onSubmit={handleLeadCapture}>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Seu nome completo</label>
-                <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#C9A44C] focus:border-transparent outline-none transition bg-gray-50 placeholder:text-gray-400" placeholder="Digite seu nome" required />
+          {/* Single Floating Notification near the woman */}
+          <div className="hidden lg:block relative h-full min-h-[500px] w-full">
+            {/* Indenização Garantida - Superior Direita */}
+            {/* Indenização Garantida - Superior Direita */}
+            <div className="absolute top-[36%] left-[42%] animate-float bg-white/15 backdrop-blur-md border border-white/20 rounded-2xl p-5 shadow-2xl flex items-center gap-4 z-20">
+              <div className="bg-[#C9A44C] rounded-full p-2.5 shadow-sm">
+                <ShieldCheck className="w-6 h-6 text-[#050C3B]" />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Seu WhatsApp</label>
-                <input type="tel" className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-[#C9A44C] focus:border-transparent outline-none transition bg-gray-50 placeholder:text-gray-400" placeholder="(00) 00000-0000" required />
+              <div className="flex flex-col gap-0.5">
+                <span className="text-white font-bold text-sm tracking-tight leading-tight">Indenização por estabilidade</span>
+                <span className="text-white/80 font-medium text-xs mt-0.5">Pagamento de salários e verbas, sem a obrigação de retornar à empresa.</span>
               </div>
-              <button type="submit" className="w-full bg-gradient-to-r from-[#B8963D] to-[#E0C878] hover:from-[#C9A44C] hover:to-[#C9A44C] text-[#050C3B] font-bold text-lg py-4 rounded-xl shadow-lg transform transition hover:-translate-y-1 flex items-center justify-center space-x-2 mt-2">
-                <span>Quero saber se tenho direito</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
-              <p className="text-xs text-center text-gray-500 mt-4 font-medium">
-                Advocacia Trabalhista Especializada<br />Dr. Filipe Cunha · OAB Nº 221.727
-              </p>
-            </form>
+            </div>
           </div>
         </div>
         {/* Background Logo Watermark */}
@@ -209,52 +271,51 @@ export default function App() {
       <section className="pt-24 pb-0 px-4 bg-[#F8F9FA]">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#050C3B] mb-4">Quem tem direito à indenização por estabilidade?</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto font-light">
-              A lei protege a gestante desde a confirmação da gravidez.<br />
-              Isso vale para a maioria das situações.
+            <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#050C3B] mb-4">Quem tem direito à estabilidade?</h2>
+            <p className="text-lg text-gray-600 max-w-4xl mx-auto font-light leading-relaxed">
+              A lei protege a gestante do <span className="highlight font-medium text-gray-800">início da gravidez</span> até <span className="highlight font-medium text-gray-800">5 meses após o nascimento</span> do bebê.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+          <div className="grid md:grid-cols-2 gap-8 items-stretch">
             {[
               { 
-                title: "Foi demitida durante a gravidez", 
-                desc: "Mesmo que a empresa não soubesse. O STF já pacificou: o desconhecimento do empregador não afasta a estabilidade."
+                icon: <AlertTriangle className="w-8 h-8 text-[#C9A44C]" />,
+                title: "Foi demitida grávida", 
+                desc: "Mesmo que a empresa não soubesse da gravidez, você ainda pode ter direito à estabilidade.",
+                note: "Tema 497 do STF"
               },
               { 
-                title: "Pediu demissão sem saber que estava grávida", 
-                desc: "O que vale é a data da concepção, não da descoberta. A rescisão pode ser questionada na Justiça do Trabalho."
+                icon: <X className="w-8 h-8 text-[#C9A44C]" />,
+                title: "Pediu demissão grávida", 
+                desc: <>O pedido de demissão somente é válido quando assistida pelo Sindicato ou por autoridade.</>,
+                note: "Tema Vinculante 55 do TST"
               },
               { 
-                title: "Pediu demissão por pressão da empresa", 
-                desc: "Mudança de função, turno ou isolamento durante a gravidez podem caracterizar dispensa indireta."
-              },
-              { 
-                title: "Estava em contrato de experiência", 
-                desc: "Contrato temporário não é exceção. A estabilidade gestante vale para qualquer vínculo empregatício."
-              },
-              { 
-                title: "Assinou a rescisão sem saber dos seus direitos", 
-                desc: "Nenhuma assinatura apaga um direito constitucional. O que foi assinado pode ser revisado judicialmente."
-              },
-              { 
+                icon: <Briefcase className="w-8 h-8 text-[#C9A44C]" />,
                 title: "Trabalhava sem carteira assinada", 
-                desc: "Mensagens, depósitos ou testemunhas podem comprovar o vínculo e abrir caminho para a indenização."
+                desc: "Mensagens e extratos bancários podem comprovar seu vínculo. A falta de registro não retira seus direitos.",
+                note: "Arts. 2º e 3º da CLT"
+              },
+              { 
+                icon: <ShieldCheck className="w-8 h-8 text-[#C9A44C]" />,
+                title: "Em experiência ou jovem aprendiz", 
+                desc: "A lei também garante a estabilidade também para contratos de experiência e Jovem Aprendiz.",
+                note: "Tema Vinculante 163 do TST"
               }
             ].map((item, i) => (
-              <div key={i} className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col h-full transition hover:shadow-md relative overflow-hidden">
-                <div className="flex justify-between items-start mb-6">
-                  <span className="text-4xl lg:text-5xl font-black text-gray-100 leading-none select-none">
-                    {(i + 1).toString().padStart(2, '0')}
-                  </span>
-                  <div className="bg-[#EBF7F2] text-[#3E9B77] text-[10px] font-bold uppercase tracking-tight px-3 py-1.5 rounded-full flex items-center space-x-1 border border-[#D5EFE3]">
-                    <Check className="w-3 h-3" />
-                    <span>Direito Garantido</span>
-                  </div>
+              <div key={i} className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-gray-100 flex flex-col justify-start h-full transition hover:shadow-md relative overflow-hidden group">
+                <div className="bg-[#050C3B]/5 w-16 h-16 rounded-2xl flex items-center justify-center mb-8">
+                  {item.icon}
                 </div>
-                <h4 className="font-bold text-[#050C3B] text-lg mb-3 leading-tight">{item.title}</h4>
-                <p className="text-gray-500 leading-relaxed text-sm lg:text-[15px] flex-grow font-medium">{item.desc}</p>
+                <h4 className="font-sans font-bold text-[#050C3B] text-xl mb-4 leading-tight">{item.title}</h4>
+                <p className="text-gray-600 leading-relaxed text-[15px] font-light">{item.desc}</p>
+                {item.note && (
+                  <div className="mt-5 pt-4 border-t border-gray-50 flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#C9A44C]"></div>
+                    <span className="text-[10px] text-gray-400 uppercase tracking-[0.2em] font-bold font-sans">{item.note}</span>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -262,48 +323,68 @@ export default function App() {
           <div className="mt-16 text-center">
             <button 
               onClick={scrollToContact}
-              className="bg-gradient-to-r from-[#B8963D] to-[#E0C878] hover:from-[#C9A44C] hover:to-[#C9A44C] text-[#050C3B] font-bold py-5 px-10 rounded-2xl shadow-xl transform transition hover:-translate-y-1 inline-flex items-center space-x-3"
+              className="w-full md:w-auto bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-8 rounded-full shadow-xl transform transition hover:-translate-y-1 inline-flex items-center justify-between group"
             >
-              <span>Quero saber se tenho direito</span>
-              <ArrowRight className="w-5 h-5" />
+              <span className="mr-6">Quero saber se tenho direito</span>
+              <div className="bg-white rounded-full p-2 flex items-center justify-center shadow-sm group-hover:bg-[#5D4017] group-hover:text-white transition-all">
+                <ArrowUpRight className="w-5 h-5" />
+              </div>
             </button>
           </div>
         </div>
       </section>
 
       {/* BLOCO 3: EXEMPLO DE CÁLCULO */}
-      <section className="pt-12 pb-24 px-4 bg-[#F8F9FA]" ref={calcRef}>
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-[3rem] p-8 md:p-16 shadow-sm border border-gray-100 relative overflow-hidden">
+      <section className="relative pt-24 pb-32 px-4 bg-[#F8F9FA] overflow-hidden" ref={calcRef}>
+        {/* Faixa decorativa azul */}
+        <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[450px] bg-[#050C3B] z-0"></div>
+
+        <div className="max-w-4xl mx-auto relative z-10">
+          <div className="bg-white rounded-[3rem] p-8 md:p-16 shadow-2xl border border-gray-100 relative overflow-hidden">
             <div className="flex flex-col md:flex-row items-center gap-12 relative z-10">
             <div className="flex-1 w-full">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#050C3B] text-[#C9A44C] mb-8 shadow-lg">
                 <Calculator className="w-8 h-8" />
               </div>
               <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#050C3B] mb-4 uppercase tracking-tight">Exemplo de Cálculo</h2>
-              <h3 className="text-xl text-gray-600 mb-8 font-medium">Entenda o que compõe a indenização</h3>
-              <p className="text-gray-600 mb-8 bg-[#F2F2F2] p-4 rounded-xl border-l-4 border-[#050C3B]">Para uma trabalhadora com salário de <strong>R$ 1.800</strong>, o cálculo pode chegar a:</p>
+              <h3 className="font-sans text-xl text-gray-600 mb-8 font-medium">Entenda o que compõe a indenização</h3>
+              <p className="text-gray-600 mb-8 bg-[#F2F2F2] p-4 rounded-xl border-l-4 border-[#050C3B]">
+                Para uma trabalhadora com salário de 
+                <span className="relative inline-block px-1 ml-1 cursor-default group/price">
+                  <span className="relative z-10 font-bold text-[#050C3B]">R$ 1.621,00</span>
+                  <svg className="absolute -inset-2 w-[calc(100%+16px)] h-[calc(100%+16px)] text-red-500 opacity-70 pointer-events-none" viewBox="0 0 100 40" preserveAspectRatio="none">
+                    <path 
+                      d="M5,20 C5,5 95,5 95,20 C95,35 5,35 5,20" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2" 
+                      strokeLinecap="round"
+                      className="stroke-draw animate-draw-circle"
+                    />
+                  </svg>
+                </span>
+              </p>
 
               <div className="space-y-5">
                 <div className="flex justify-between items-center border-b border-gray-100 pb-3" style={getRowStyle(0)}>
                   <span className="text-gray-700">Salários do período de estabilidade (12 meses)</span>
-                  <span className="font-bold text-[#050C3B]">R$ 21.600</span>
+                  <span className="font-bold text-[#050C3B]">R$ 19.452,00</span>
                 </div>
                 <div className="flex justify-between items-center border-b border-gray-100 pb-3" style={getRowStyle(200)}>
                   <span className="text-gray-700">FGTS + multa de 40%</span>
-                  <span className="font-bold text-[#050C3B]">R$ 3.628</span>
+                  <span className="font-bold text-[#050C3B]">R$ 2.178,00</span>
                 </div>
                 <div className="flex justify-between items-center border-b border-gray-100 pb-3" style={getRowStyle(400)}>
                   <span className="text-gray-700">Férias proporcionais + 1/3</span>
-                  <span className="font-bold text-[#050C3B]">R$ 2.400</span>
+                  <span className="font-bold text-[#050C3B]">R$ 2.161,00</span>
                 </div>
                 <div className="flex justify-between items-center border-b border-gray-100 pb-3" style={getRowStyle(600)}>
                   <span className="text-gray-700">13º salário proporcional</span>
-                  <span className="font-bold text-[#050C3B]">R$ 1.800</span>
+                  <span className="font-bold text-[#050C3B]">R$ 1.621,00</span>
                 </div>
                 <div className="flex justify-between items-center pt-6 bg-[#050C3B] text-white p-6 rounded-2xl shadow-lg mt-4" style={getTotalStyle()}>
                   <span className="text-xl font-bold">Total estimado</span>
-                  <span className="text-3xl font-black text-[#C9A44C]">R$ 29.428</span>
+                  <span className="text-3xl font-black text-[#C9A44C]">R$ 25.412,00</span>
                 </div>
                 <p className="text-gray-600 text-sm italic font-light mt-6 text-center">
                   Exemplo hipotético com fins informativos. O valor real depende do salário, tempo de gestação e circunstâncias do caso.
@@ -320,115 +401,223 @@ export default function App() {
           <div className="mt-12 text-center">
             <button 
               onClick={scrollToContact}
-              className="bg-gradient-to-r from-[#B8963D] to-[#E0C878] hover:from-[#C9A44C] hover:to-[#C9A44C] text-[#050C3B] font-bold py-5 px-10 rounded-2xl shadow-xl transform transition hover:-translate-y-1 inline-flex items-center space-x-3 w-full md:w-auto justify-center"
+              className="w-full md:w-auto bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-8 rounded-full shadow-xl transform transition hover:-translate-y-1 inline-flex items-center justify-between group"
             >
-              <span>Quero saber se tenho direito</span>
-              <Calculator className="w-5 h-5" />
+              <span className="mr-6">Quero saber se tenho direito</span>
+              <div className="bg-white rounded-full p-2 flex items-center justify-center shadow-sm group-hover:bg-[#5D4017] group-hover:text-white transition-all">
+                <ArrowUpRight className="w-5 h-5" />
+              </div>
             </button>
           </div>
         </div>
       </section>
 
       {/* BLOCO 4: MATÉRIA JORNALÍSTICA */}
-      <section className="py-24 px-4 bg-[#050C3B] text-white overflow-hidden">
+      <section className="py-24 px-4 bg-white overflow-hidden relative">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="text-[#C9A44C] font-bold tracking-[0.2em] uppercase text-sm mb-4 block">Mídia Nacional</span>
-            <h2 className="font-serif text-3xl md:text-5xl font-bold text-white">A justiça está do seu lado.</h2>
+          <div className="text-center mb-12 px-4 max-w-4xl mx-auto">
+            <span className="text-[#A6822E] font-bold tracking-[0.2em] uppercase text-xs mb-3 block">Repercussão na Mídia Nacional</span>
+            <h2 className="font-serif text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-[#050C3B] leading-tight text-pretty">
+              "Grávidas têm direito à indenização se forem demitidas", reafirma STF
+            </h2>
           </div>
           
-          <div className="bg-white text-[#050C3B] rounded-[3.5rem] overflow-hidden shadow-2xl flex flex-col md:flex-row border border-white/10">
-            <div className="md:w-1/2 relative aspect-video md:aspect-auto min-h-[400px]">
-              <iframe
-                className="absolute inset-0 w-full h-full"
-                src="https://www.youtube.com/embed/PiXdoNtGgOI?si=1XPAE5rBvGel4BxZ"
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-              ></iframe>
+          <div className="grid lg:grid-cols-5 gap-8 items-start bg-[#F8F9FA] rounded-[3.5rem] overflow-hidden shadow-xl border border-gray-100 p-4 md:p-10">
+            <div className="lg:col-span-3 relative aspect-video rounded-[2.5rem] overflow-hidden shadow-inner bg-black group cursor-pointer" onClick={() => setShowVideo(true)}>
+              {!showVideo ? (
+                <>
+                  <img 
+                    src="https://img.youtube.com/vi/PiXdoNtGgOI/maxresdefault.jpg" 
+                    alt="Preview Matéria SBT" 
+                    className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-all">
+                    <div className="w-16 h-16 md:w-24 md:h-24 bg-[#C9A44C] rounded-full flex items-center justify-center shadow-2xl transform group-hover:scale-110 transition-transform">
+                      <Play className="w-8 h-8 md:w-12 md:h-12 text-[#050C3B] fill-current ml-1" />
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="w-full h-full">
+                  <div 
+                    className="js-plyr w-full h-full"
+                    data-plyr-provider="youtube" 
+                    data-plyr-embed-id="PiXdoNtGgOI"
+                  ></div>
+                </div>
+              )}
             </div>
-            <div className="p-10 md:p-16 md:w-1/2 flex flex-col justify-center relative">
-              <div className="absolute top-0 right-0 p-8 opacity-5">
-                <PlayCircle className="w-24 h-24" />
+            <div className="lg:col-span-2 p-2 md:p-4 text-left">
+              <div className="mb-6">
+                <img 
+                  src="/images/SBT_News_2025.svg.png" 
+                  alt="SBT News Logo" 
+                  className="h-10 w-auto object-contain rounded-lg"
+                />
               </div>
-              <span className="text-sm font-bold text-[#C9A44C] uppercase tracking-widest mb-6 block">Matéria SBT</span>
-              <h3 className="font-serif text-2xl md:text-4xl font-bold mb-8 leading-tight">
-                "Grávidas têm direito à indenização se forem demitidas", reafirma STF.
-              </h3>
-              <p className="text-gray-600 text-xl leading-relaxed font-light mb-4">
-                A Justiça garante que, se a demissão ocorrer, a funcionária deve ser indenizada mesmo que a empresa ainda não saiba da gestação.
+              <p className="text-gray-600 text-sm md:text-lg leading-[1.6] font-light mb-4 italic">
+                A Justiça garante que, em caso de demissão injusta, a funcionária tem direito à estabilidade (ou indenização), mesmo que a empresa ainda não soubesse da gestação.
               </p>
+
+              <ul className="space-y-3">
+                {[
+                  "Fim da obrigação de retorno à empresa",
+                  "Indenização substitutiva de todo o período",
+                  "Proteção para o período de amamentação"
+                ].map((item, idx) => (
+                  <li key={idx} className="flex items-start gap-4">
+                    <div className="mt-1.5 w-2 h-2 rounded-full bg-[#C9A44C] shrink-0"></div>
+                    <span className="text-[#050C3B] text-sm md:text-base font-semibold leading-tight">{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
           <div className="mt-12 text-center">
             <button 
               onClick={scrollToContact}
-              className="bg-gradient-to-r from-[#B8963D] to-[#E0C878] hover:from-[#C9A44C] hover:to-[#C9A44C] text-[#050C3B] font-bold py-5 px-10 rounded-2xl shadow-xl transform transition hover:-translate-y-1 inline-flex items-center space-x-3 w-full md:w-auto justify-center"
+              className="w-full md:w-auto bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-8 rounded-full shadow-xl transform transition hover:-translate-y-1 inline-flex items-center justify-between group"
             >
-              <span>Quero saber se tenho direito</span>
-              <ArrowRight className="w-5 h-5" />
+              <span className="mr-6">Quero saber se tenho direito</span>
+              <div className="bg-white rounded-full p-2 flex items-center justify-center shadow-sm group-hover:bg-[#5D4017] group-hover:text-white transition-all">
+                <ArrowUpRight className="w-5 h-5" />
+              </div>
             </button>
           </div>
         </div>
       </section>
 
-
-
-      {/* BLOCO 5: FAQ */}
+      {/* BLOCO 5: APRESENTAÇÃO DO FILIPE */}
       <section className="py-24 px-4 bg-[#F8F9FA]">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="text-[#C9A44C] font-bold tracking-[0.2em] uppercase text-sm mb-4 block">Antes de agir</span>
+          <div className="bg-white rounded-[2rem] overflow-hidden shadow-xl flex flex-col md:flex-row border border-gray-100">
+            <div className="md:w-2/5 relative h-[500px] md:h-auto overflow-hidden group">
+              <img src="/images/dr-filipe-cunha.png" alt="Dr. Filipe Cunha" className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-1000 group-hover:scale-105" />
+              
+              {/* Circular Rotating Badge with Glassmorphism */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#050C3B]/60 via-transparent to-transparent"></div>
+              <div className="absolute bottom-10 left-1/2 -translate-x-1/2 md:left-10 md:translate-x-0 group/badge">
+                <div className="relative w-36 h-36 md:w-44 md:h-44 flex items-center justify-center">
+                  {/* Frosted Glass Circle */}
+                  <div className="absolute inset-0 bg-white/10 backdrop-blur-lg border border-white/20 rounded-full shadow-2xl overflow-hidden"></div>
+                  
+                  {/* Rotating Text */}
+                  <svg className="absolute inset-0 w-full h-full animate-[spin_12s_linear_infinite]" viewBox="0 0 100 100">
+                    <defs>
+                      <path id="circlePath" d="M 50, 50 m -38, 0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0" />
+                    </defs>
+                    <text className="fill-white font-medium text-[5.5px] uppercase tracking-[0.3em]">
+                      <textPath xlinkHref="#circlePath" startOffset="0%">
+                        Advogado da Gestante • Advogado da Gestante • 
+                      </textPath>
+                    </text>
+                  </svg>
+                  
+                  {/* Central Logo */}
+                  <div className="relative z-10 w-16 md:w-20 transition-transform duration-500 group-hover/badge:scale-110">
+                    <img 
+                      src="/images/logo-branco-fundo-transparente.png" 
+                      alt="Logo Cunhas & Cunha" 
+                      className="w-full h-auto object-contain drop-shadow-lg"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="md:w-3/5 p-10 md:p-14 flex flex-col justify-center">
+              <h4 className="text-[#C9A44C] font-bold tracking-[0.2em] uppercase text-sm mb-3">Quem vai cuidar do seu caso</h4>
+              <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#050C3B] mb-2">Dr. Filipe Cunha</h2>
+              <p className="text-gray-600 mb-8 font-medium text-lg leading-relaxed">Advogado Trabalhista · OAB/RJ Nº 221.727</p>
+
+              <div className="flex flex-wrap gap-3 mb-10">
+                <span className="bg-[#050C3B]/5 text-[#050C3B] px-4 py-1.5 rounded-full text-sm font-semibold border border-[#050C3B]/10">+ 12 anos de experiência</span>
+                <span className="bg-[#050C3B]/5 text-[#050C3B] px-4 py-1.5 rounded-full text-sm font-semibold border border-[#050C3B]/10">Delegado de Prerrogativas</span>
+                <span className="bg-[#050C3B]/5 text-[#050C3B] px-4 py-1.5 rounded-full text-sm font-semibold border border-[#050C3B]/10">Comissão da OAB/RJ</span>
+                <span className="bg-[#C9A44C]/10 text-[#C9A44C] px-4 py-1.5 rounded-full text-sm font-semibold border border-[#C9A44C]/20">Advogado da Gestante</span>
+              </div>
+
+              <div className="space-y-6 text-gray-600 leading-relaxed text-lg font-light">
+                <p>Atuo no Direito do Trabalho há 12 anos, com experiência consolidada na defesa dos direitos de gestantes.</p>
+                <p>Escolhi dedicar meu trabalho à defesa de gestantes porque acredito que nenhuma mulher deveria chegar ao parto sem a segurança que a lei garante.</p>
+                <p>Além disso, sou casado com Dra. Jussara, também advogada, e pai do Paulo Miguel. Sei o que significa querer proteger quem você ama, e é com esse mesmo cuidado que atendemos cada cliente.</p>
+                <div className="pt-8 border-t border-gray-100 mt-10 relative">
+                  <Quote className="absolute -top-4 -left-2 w-10 h-10 text-[#C9A44C]/20" />
+                  <p className="font-serif font-bold text-[#050C3B] text-2xl italic leading-tight pl-6 border-l-4 border-[#C9A44C]">
+                    "Muitas mulheres que atendo acham que já perderam o direito. Na maioria dos casos, ainda não perderam. É importante agir rápido."
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-12 text-center">
+            <button 
+              onClick={scrollToContact}
+              className="w-full md:w-auto bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-8 rounded-full shadow-xl transform transition hover:-translate-y-1 inline-flex items-center justify-between group"
+            >
+              <span className="mr-6">Quero saber se tenho direito</span>
+              <div className="bg-white rounded-full p-2 flex items-center justify-center shadow-sm group-hover:bg-[#5D4017] group-hover:text-white transition-all">
+                <ArrowUpRight className="w-5 h-5" />
+              </div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* BLOCO 6: FAQ */}
+      <section className="py-24 px-4 bg-white overflow-hidden relative border-y border-gray-50">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16 px-4">
+            <span className="text-[#A6822E] font-bold tracking-[0.2em] uppercase text-xs mb-3 block">Dúvidas Frequentes</span>
             <h2 className="font-serif text-3xl md:text-5xl font-bold text-[#050C3B]">
-              Veja as dúvidas mais comuns <span className="text-gray-200">—</span> <span className="text-[#C9A44C]">e as respostas.</span>
+              Perguntas e Respostas
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="space-y-4">
             {[
               { 
-                q: '"Assinei a rescisão. Ainda tenho direito?"', 
-                bold: "Sim.", 
-                a: "Nenhuma assinatura apaga um direito garantido pela Constituição.",
-                base: "Base: art. 10, II, \"b\" do ADCT"
+                q: 'Assinei a rescisão. Ainda tenho direito?', 
+                a: "Sim. Nenhuma assinatura apaga um direito garantido pela Constituição Federal (art. 10, II, 'b' do ADCT), que protege a gestante contra demissões arbitrárias."
               },
               { 
-                q: '"Eu que pedi demissão. Perdi tudo?"', 
-                bold: "Não.", 
-                a: "Se você não sabia que estava grávida — ou foi pressionada — o pedido pode ser questionado na Justiça.",
-                base: "Jurisprudência consolidada no TST"
+                q: 'Eu que pedi demissão. Perdi tudo?', 
+                a: "Não necessariamente. Conforme a jurisprudência consolidada do TST, se o pedido foi feito sob pressão, por desconhecimento da gravidez ou sem a devida assistência sindical, ele pode ser revertido judicialmente."
               },
               { 
-                q: '"Era contrato de experiência. Tenho algum direito?"', 
-                bold: "Sim.", 
-                a: "A proteção vale para qualquer tipo de contrato, sem exceção.",
-                base: "Base: art. 10, II, \"b\" do ADCT"
+                q: 'Era contrato de experiência ou aprendizagem. Tenho direito?', 
+                a: "Sim. A proteção à maternidade é um direito social que prevalece sobre a modalidade do contrato, abrangendo inclusive contratos temporários e de experiência (Tema 163 do TST)."
               },
               { 
-                q: '"A empresa não sabia que eu estava grávida. Isso muda alguma coisa?"', 
-                bold: "Não.", 
-                a: "O que importa é que você estava grávida na data da demissão — independente de qualquer comunicação à empresa.",
-                base: "STF — Tese 497"
+                q: 'A empresa não sabia que eu estava grávida. Isso muda algo?', 
+                a: "Não. O Supremo Tribunal Federal (STF) decidiu no Tema 497 que o direito à estabilidade independe do conhecimento prévio do empregador ou da própria gestante."
+              },
+              { 
+                q: 'Sou obrigada a voltar para a empresa se eu ganhar a ação?', 
+                a: "Não. O entendimento do TST no Tema 134 permite que a gestante opte pela indenização financeira em vez do retorno, especialmente quando a relação de confiança com a empresa foi rompida."
               }
             ].map((faq, i) => (
-              <div key={i} className="bg-white p-10 rounded-[2.5rem] shadow-sm border-t-4 border-[#050C3B] flex flex-col h-full hover:shadow-md transition duration-300">
-                <div className="flex gap-4 mb-6">
-                  <div className="w-8 h-8 rounded-full bg-[#050C3B] text-white flex items-center justify-center flex-shrink-0 font-bold text-sm mt-1">
-                    ?
+              <div key={i} className="bg-white rounded-[1.5rem] shadow-sm overflow-hidden border border-gray-100 transition-all duration-300">
+                <button 
+                  onClick={() => setOpenFaqIndex(openFaqIndex === i ? null : i)}
+                  className="w-full p-6 md:p-8 flex items-center justify-between text-left group"
+                >
+                  <span className={`font-sans font-bold text-lg md:text-xl transition-colors duration-300 ${openFaqIndex === i ? "text-[#C9A44C]" : "text-[#050C3B]"}`}>
+                    {faq.q}
+                  </span>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${openFaqIndex === i ? "bg-[#C9A44C] text-[#050C3B] rotate-180" : "bg-gray-50 text-[#050C3B] group-hover:bg-[#050C3B]/5"}`}>
+                    <ChevronRight className={`w-5 h-5 transition-transform ${openFaqIndex === i ? "" : ""}`} />
                   </div>
-                  <h4 className="font-bold text-[#050C3B] text-xl leading-tight font-serif">{faq.q}</h4>
-                </div>
-                <div className="flex-grow">
-                  <p className="text-gray-600 leading-relaxed text-lg">
-                    <span className="font-bold text-[#050C3B]">{faq.bold}</span> {faq.a}
-                  </p>
-                </div>
-                <div className="mt-8 pt-6 border-t border-gray-50 flex items-center justify-between">
-                  <span className="text-[#C9A44C] text-sm font-bold">{faq.base}</span>
-                  <button onClick={scrollToContact} className="text-[#050C3B] hover:text-[#C9A44C] transition font-bold text-xs uppercase underline underline-offset-4">Tirar dúvida</button>
+                </button>
+                <div 
+                  className={`overflow-hidden transition-all duration-500 ease-in-out ${openFaqIndex === i ? "max-h-[500px]" : "max-h-0"}`}
+                >
+                  <div className="px-6 md:px-8 pb-8 pt-0">
+                    <p className="text-gray-600 leading-relaxed text-base md:text-lg font-light border-t border-gray-50 pt-6">
+                      {faq.a}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -437,160 +626,156 @@ export default function App() {
           <div className="mt-16 text-center">
             <button 
               onClick={scrollToContact}
-              className="bg-gradient-to-r from-[#B8963D] to-[#E0C878] hover:from-[#C9A44C] hover:to-[#C9A44C] text-[#050C3B] font-bold py-5 px-12 rounded-2xl shadow-xl transform transition hover:-translate-y-1 inline-flex items-center space-x-3"
+              className="w-full md:w-auto bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-10 rounded-full shadow-xl transform transition hover:-translate-y-1 inline-flex items-center justify-between group"
             >
-              <span>Quero saber se tenho direito</span>
-              <Info className="w-5 h-5" />
+              <span className="mr-8">Quero saber se tenho direito</span>
+              <div className="bg-white rounded-full p-2 flex items-center justify-center shadow-sm group-hover:bg-[#5D4017] group-hover:text-white transition-all">
+                <ArrowUpRight className="w-5 h-5" />
+              </div>
             </button>
           </div>
         </div>
       </section>
 
-      {/* BLOCO 6: APRESENTAÇÃO DO FILIPE */}
-      <section className="py-24 px-4 bg-[#F2F2F2]">
-        <div className="max-w-5xl mx-auto">
-          <div className="bg-white rounded-[2rem] overflow-hidden shadow-xl flex flex-col md:flex-row border border-gray-100">
-            <div className="md:w-2/5 relative h-[500px] md:h-auto">
-              <img src="/images/dr-filipe-cunha.png" alt="Dr. Filipe Cunha" className="absolute inset-0 w-full h-full object-cover object-top" />
-            </div>
-            <div className="md:w-3/5 p-10 md:p-14 flex flex-col justify-center">
-              <h4 className="text-[#C9A44C] font-bold tracking-widest uppercase text-sm mb-3">Quem vai cuidar do seu caso</h4>
-              <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#050C3B] mb-2">Dr. Filipe Cunha</h2>
-              <p className="text-gray-500 mb-8 font-medium text-lg">Advogado Trabalhista · OAB Nº 221.727</p>
 
-              <div className="flex flex-wrap gap-3 mb-10">
-                <span className="bg-[#050C3B]/5 text-[#050C3B] px-4 py-1.5 rounded-full text-sm font-semibold border border-[#050C3B]/10">+ 10 anos de experiência</span>
-                <span className="bg-[#050C3B]/5 text-[#050C3B] px-4 py-1.5 rounded-full text-sm font-semibold border border-[#050C3B]/10">Foi Delegado OAB/RJ</span>
-                <span className="bg-[#C9A44C]/10 text-[#C9A44C] px-4 py-1.5 rounded-full text-sm font-semibold border border-[#C9A44C]/20">Advogado da Gestante</span>
-              </div>
 
-              <div className="space-y-6 text-gray-600 leading-relaxed text-lg">
-                <p>Sou advogado há mais de 10 anos, com atuação especializada em Direito do Trabalho, com clientes em todo o Brasil.</p>
-                <p>Escolhi dedicar meu trabalho à defesa de gestantes porque acredito que nenhuma mulher deveria chegar ao parto sem a segurança que a lei garante.</p>
-                <p>Além disso, sou casado com Dra. Jussara, também advogada, e pai do Paulo Miguel. Sei o que significa querer proteger quem você ama, e é com esse mesmo cuidado que atendemos cada cliente.</p>
-                <div className="pt-8 border-t border-gray-100 mt-8">
-                  <p className="font-sans font-light text-[#050C3B] text-xl italic leading-relaxed flex-grow">"Muitas mulheres que atendo acham que já perderam o direito. Na maioria dos casos, ainda não perderam. É importante agir rápido."</p>
+
+
+
+
+
+      {/* BLOCO FINAL: CONVERSÃO E GALERIA (Inspirado no screenshot - Refinado) */}
+      <section className="py-24 px-4 bg-[#F8F9FA] relative overflow-hidden">
+        <div className="max-w-7xl mx-auto text-center relative z-10">
+          <div className="mb-16">
+            <h2 className="font-serif text-3xl md:text-5xl font-bold text-[#050C3B] mb-6 tracking-tight max-w-4xl mx-auto leading-tight">
+              Consulte um <span className="text-[#C9A44C]">advogado de confiança</span> e descubra se você pode ter direito.
+            </h2>
+            <p className="text-gray-500 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-light">
+              Nossa equipe de especialistas está à disposição para analisar o seu caso.
+            </p>
+          </div>
+
+          <div className="mt-2 bg-[#F8F9FA] rounded-[3rem] p-4 md:p-10 relative">
+            {/* Floating Contact Card - Centered and Clean */}
+            <div className="relative w-full max-w-lg mx-auto px-4 z-20">
+              <div className="bg-white border border-gray-100 shadow-[0_32px_64px_-16px_rgba(5,12,59,0.1)] rounded-[3rem] p-8 md:p-12 text-left">
+                <div className="text-center mb-8">
+                  <h4 className="font-serif text-2xl font-bold text-[#050C3B]">Iniciar minha análise</h4>
+                  <p className="text-gray-400 text-sm">Preencha para saber se você tem direito agora.</p>
                 </div>
+                
+                <form className="space-y-4" onSubmit={handleLeadCapture}>
+                  <div>
+                    <input 
+                      type="text" 
+                      className="w-full px-5 py-4 rounded-xl border border-gray-100 focus:ring-2 focus:ring-[#C9A44C] outline-none transition bg-gray-50 text-gray-800 placeholder:text-gray-400" 
+                      placeholder="Seu Nome completo" 
+                      value={formData.name}
+                      onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                      required 
+                    />
+                  </div>
+                  <div>
+                    <input 
+                      type="tel" 
+                      className="w-full px-5 py-4 rounded-xl border border-gray-100 focus:ring-2 focus:ring-[#C9A44C] outline-none transition bg-gray-50 text-gray-800 placeholder:text-gray-400" 
+                      placeholder="Seu WhatsApp" 
+                      value={formData.phone}
+                      onChange={handlePhoneChange}
+                      required 
+                    />
+                  </div>
+                  <button type="submit" className="w-full bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-5 rounded-2xl shadow-xl transition-all flex items-center justify-between px-8 group/btn mt-6">
+                    <span className="uppercase tracking-widest text-sm">Consultar Especialista</span>
+                    <div className="bg-[#5D4017] text-[#EBCB8D] rounded-full p-2 group-hover/btn:scale-110 transition-transform shadow-inner">
+                      <ArrowUpRight className="w-5 h-5" />
+                    </div>
+                  </button>
+                </form>
+                
+                <p className="text-[10px] text-gray-400 mt-6 text-center uppercase tracking-widest flex items-center justify-center space-x-2">
+                  <ShieldCheck className="w-3 h-3 text-[#3E9B77]" />
+                  <span>Sigilo garantido pela OAB</span>
+                </p>
               </div>
             </div>
-          </div>
-
-          <div className="mt-12 text-center">
-            <button 
-              onClick={scrollToContact}
-              className="bg-gradient-to-r from-[#B8963D] to-[#E0C878] hover:from-[#C9A44C] hover:to-[#C9A44C] text-[#050C3B] font-bold py-5 px-10 rounded-2xl shadow-xl transform transition hover:-translate-y-1 inline-flex items-center space-x-3"
-            >
-              <span>Quero saber se tenho direito</span>
-              <ArrowRight className="w-5 h-5" />
-            </button>
           </div>
         </div>
       </section>
 
-      {/* BLOCO 7: COMO FUNCIONA */}
-      <section className="py-24 px-4 bg-[#F8F9FA]">
+      <section className="py-24 px-4 bg-white border-t border-gray-50">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-white rounded-[3rem] p-12 md:p-20 shadow-sm border border-gray-100">
-            <div className="text-center mb-20">
-              <span className="text-gray-400 font-medium mb-2 block">Como funciona?</span>
-              <h2 className="font-serif text-3xl md:text-5xl font-bold text-[#050C3B]">
-                São <span className="text-[#C9A44C]">3 passos</span> simples.
-              </h2>
-            </div>
+          <div className="text-center mb-16">
+            <h2 className="font-serif text-3xl md:text-5xl font-bold text-[#050C3B] mb-6">Como funciona?</h2>
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto">Um processo simples, rápido e totalmente focado em garantir seus direitos.</p>
+          </div>
 
-            <div className="grid md:grid-cols-3 gap-16 relative">
-              {/* Connecting line for desktop */}
-              <div className="hidden md:block absolute top-10 left-[15%] right-[15%] h-px bg-gray-200 -z-0"></div>
+          <div className="relative">
+            <div className="grid md:grid-cols-3 gap-8 relative z-10">
+              {/* Connecting Line (Fio Dourado) - Desktop only */}
+              <div className="hidden md:block absolute top-[40px] left-[15%] right-[15%] h-px bg-[#C9A44C]/30 z-0"></div>
 
               {[
-                { 
-                  step: "1", 
-                  title: "Preencha o formulário", 
-                  desc: <>Deixe seu nome, WhatsApp e responda <span className="font-bold text-[#050C3B]">3 perguntas rápidas</span> sobre sua situação.</> 
+                {
+                  num: "1",
+                  title: "Você preenche o formulário",
+                  desc: "Deixe seu nome, WhatsApp e responda 3 perguntas rápidas sobre sua situação."
                 },
-                { 
-                  step: "2", 
-                  title: "Receba o contato", 
-                  desc: <>Nossa equipe entra em contato pelo WhatsApp para explicar seu direito e <span className="font-bold text-[#050C3B]">estimar o valor da sua indenização.</span></> 
+                {
+                  num: "2",
+                  title: "Te chamaremos no WhatsApp",
+                  desc: "Nossa equipe entra em contato pelo WhatsApp para fazer um diagnóstico do seu caso e calcular os valores."
                 },
-                { 
-                  step: "3", 
-                  title: "Análise completa", 
-                  desc: <>Você descobre <span className="font-bold text-[#050C3B]">se tem direito</span>, <span className="font-bold text-[#050C3B]">quanto pode receber</span> — e o que fazer a seguir.</> 
+                {
+                  num: "3",
+                  title: "Orientação Jurídica",
+                  desc: "Você descobre se tem direito, quanto pode receber e os próximos passos.",
+                  highlight: true
                 }
-              ].map((item, i) => (
-                <div key={i} className="relative flex flex-col items-center text-center z-10">
-                  <div className="w-20 h-20 rounded-full bg-[#050C3B] text-white flex items-center justify-center text-2xl font-bold mb-8 shadow-xl border-8 border-white">
-                    {item.step}
+              ].map((step, i) => (
+                <div key={i} className={`relative flex flex-col items-center transition-all duration-700 ${step.highlight ? 'scale-105 md:scale-110 z-20' : 'opacity-80'}`}>
+                  <div className={`w-20 h-20 rounded-full flex items-center justify-center text-2xl font-bold mb-8 border-4 transition-all ${step.highlight ? 'bg-[#050C3B] text-white border-[#C9A44C] shadow-[0_0_30px_rgba(201,164,76,0.3)]' : 'bg-white text-[#050C3B] border-gray-100 shadow-sm'}`}>
+                    {step.num}
                   </div>
-                  <h3 className="text-xl font-bold text-[#050C3B] mb-4 font-serif">{item.title}</h3>
-                  <p className="text-gray-500 leading-relaxed font-medium">{item.desc}</p>
+                  <div className={`p-10 rounded-[3rem] text-center w-full transition-all ${step.highlight ? 'bg-white shadow-[0_32px_64px_-16px_rgba(5,12,59,0.1)] border border-gray-50' : 'bg-gray-50/50'}`}>
+                    <h4 className={`font-serif text-xl font-bold mb-4 ${step.highlight ? 'text-[#050C3B]' : 'text-gray-800'}`}>
+                      {step.title}
+                    </h4>
+                    <p className="text-gray-500 text-sm md:text-base leading-relaxed font-medium">
+                      {step.desc}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* NOVO BLOCO: FORMULÁRIO DE CONVERSÃO */}
-      <section className="py-24 px-4 bg-[#050C3B] relative overflow-hidden">
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h2 className="font-serif text-3xl md:text-5xl font-bold mb-6 text-white leading-tight">
-            Descubra agora quanto você pode receber de indenização.
-          </h2>
-          <p className="text-xl text-gray-300 mb-12 font-light">
-            Preencha os dados abaixo para uma análise técnica da sua situação.
-          </p>
-
-          <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-2xl text-gray-800 max-w-xl mx-auto text-left border border-gray-100">
-            <form className="space-y-6" onSubmit={handleLeadCapture}>
-              <div>
-                <label className="block text-sm font-bold text-[#050C3B] mb-2 uppercase tracking-wide">Nome Completo</label>
-                <input 
-                  type="text" 
-                  className="w-full px-5 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#C9A44C] focus:border-transparent outline-none transition bg-gray-50 placeholder:text-gray-400" 
-                  placeholder="Seu nome aqui" 
-                  required 
-                />
+          {/* Alerta de Prazo integrado como Disclaimer */}
+          <div className="mt-20 max-w-4xl mx-auto">
+            <div className="bg-[#B23333] rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 shadow-lg relative overflow-hidden group">
+              <div className="flex-shrink-0 relative">
+                <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center border border-white/20 backdrop-blur-sm">
+                  <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                    <circle cx="12" cy="12" r="10" strokeOpacity="0.3" />
+                    <path d="M12 12L12 6" className="origin-[12px_12px] animate-[spin_4s_linear_infinite]" />
+                    <path d="M12 12L16 12" className="origin-[12px_12px] animate-[spin_15s_linear_infinite]" />
+                  </svg>
+                </div>
+                <div className="absolute inset-0 border-2 border-white/20 rounded-full animate-ping opacity-10"></div>
               </div>
-              <div>
-                <label className="block text-sm font-bold text-[#050C3B] mb-2 uppercase tracking-wide">WhatsApp</label>
-                <input 
-                  type="tel" 
-                  className="w-full px-5 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[#C9A44C] focus:border-transparent outline-none transition bg-gray-50 placeholder:text-gray-400" 
-                  placeholder="(00) 00000-0000" 
-                  required 
-                />
+              
+              <div className="text-center md:text-left">
+                <h3 className="text-white font-bold text-xl mb-1 flex items-center justify-center md:justify-start gap-2">
+                  Atenção: seu prazo está diminuindo.
+                </h3>
+                <p className="text-white/90 text-sm md:text-base leading-relaxed font-medium">
+                  A lei trabalhista estabelece um prazo para buscar seus direitos — e ele já está correndo desde a data da rescisão. Quanto antes você agir, mais opções você tem.
+                </p>
               </div>
-              <button type="submit" className="w-full bg-gradient-to-r from-[#B8963D] to-[#E0C878] hover:from-[#C9A44C] hover:to-[#C9A44C] text-[#050C3B] font-black text-lg py-5 rounded-2xl shadow-xl transform transition hover:-translate-y-1 flex items-center justify-center space-x-3 mt-6">
-                <span>QUERO SABER SE TENHO DIREITO</span>
-                <ArrowRight className="w-6 h-6" />
-              </button>
-            </form>
-            <p className="text-[10px] text-gray-400 mt-6 text-center uppercase tracking-widest flex items-center justify-center space-x-2">
-              <ShieldCheck className="w-3 h-3 text-[#3E9B77]" />
-              <span>Seus dados estão protegidos por sigilo profissional</span>
-            </p>
-          </div>
-        </div>
 
-        {/* Background Logo Watermark */}
-        <div className="absolute opacity-[0.03] -right-40 -bottom-20 pointer-events-none transform rotate-12">
-          <img src="/images/logo-fundo-transparente.png" alt="" className="w-[600px] h-[600px] object-contain" />
-        </div>
-      </section>
-      <section className="py-24 px-4 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="bg-red-50/50 rounded-[2.5rem] p-10 md:p-16 border border-red-100 flex flex-col md:flex-row items-center gap-10 text-center md:text-left">
-            <div className="flex-shrink-0 w-20 h-20 bg-[#D32F2F] rounded-full flex items-center justify-center shadow-2xl shadow-red-200">
-              <AlertTriangle className="w-10 h-10 text-white" />
-            </div>
-            <div>
-              <h2 className="font-serif text-2xl md:text-4xl font-bold mb-4 text-[#A11F1F]">Atenção: seu prazo está diminuindo.</h2>
-              <p className="text-lg md:text-xl text-[#A11F1F]/80 font-medium leading-relaxed mb-4">
-                A lei trabalhista estabelece um prazo para buscar seus direitos — e ele já está correndo desde a data da rescisão. Quanto antes você agir, mais opções você tem.
-              </p>
-              <span className="text-xs font-bold text-[#A11F1F]/60 uppercase tracking-widest italic">Art. 7º, XXIX da Constituição Federal</span>
+              {/* Textura de fundo sutil */}
+              <div className="absolute inset-0 opacity-[0.05] pointer-events-none bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)] bg-[size:16px_16px]"></div>
             </div>
           </div>
         </div>
@@ -598,7 +783,8 @@ export default function App() {
 
 
 
-      {/* FOOTER */}
+
+
       <footer className="bg-[#030722] text-gray-400 py-20 px-4 border-t border-white/5">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
@@ -626,11 +812,7 @@ export default function App() {
                 </li>
                 <li className="flex items-start space-x-3">
                   <MapPin className="w-5 h-5 text-[#C9A44C] flex-shrink-0" />
-                  <span className="text-sm">Rua Frei Caneca, 441, Estácio, Rio de Janeiro - RJ, CEP 20211-020</span>
-                </li>
-                <li className="flex items-center space-x-3">
-                  <Globe className="w-5 h-5 text-[#D5EFE3]" />
-                  <span className="text-sm font-medium text-[#D5EFE3]">Atendimento em todo o Brasil (100% Digital)</span>
+                  <span className="text-sm">Av. Presidente Vargas 590</span>
                 </li>
               </ul>
             </div>
@@ -642,7 +824,7 @@ export default function App() {
                 <li><button onClick={() => openLegalModal('privacy')} className="hover:text-[#C9A44C] transition-colors text-sm text-left">Política de Privacidade</button></li>
                 <li><button onClick={() => openLegalModal('terms')} className="hover:text-[#C9A44C] transition-colors text-sm text-left">Termos de Uso</button></li>
                 <li><button onClick={() => openLegalModal('ethics')} className="hover:text-[#C9A44C] transition-colors text-sm text-left">Ética e Compliance</button></li>
-                <li className="text-xs pt-2">Dr. Filipe Cunha · OAB Nº 221.727</li>
+                <li className="text-xs pt-2">Dr. Filipe Cunha · OAB/RJ Nº 221.727</li>
               </ul>
             </div>
 
@@ -698,7 +880,7 @@ export default function App() {
                 <div className="flex-grow flex flex-col">
                   {currentSurveyStep === 1 && (
                     <div className="animate-in fade-in slide-in-from-bottom-6 duration-700">
-                      <p className="text-[#050C3B] font-serif text-2xl font-bold mb-8 leading-tight text-center">Há quanto tempo ocorreu o seu desligamento?</p>
+                      <p className="text-[#050C3B] font-serif text-2xl font-bold mb-8 leading-tight text-center">Há quanto tempo ocorreu a sua demissão?</p>
                       <div className="grid gap-3">
                         {["Menos de 6 meses", "Entre 6 meses e 1 ano", "Entre 1 ano e 2 anos", "Mais de 2 anos"].map((opt) => (
                           <button 
@@ -717,11 +899,11 @@ export default function App() {
                   )}
                   {currentSurveyStep === 2 && (
                     <div className="animate-in fade-in slide-in-from-right-6 duration-700">
-                      <p className="text-[#050C3B] font-serif text-2xl font-bold mb-8 leading-tight text-center">Como aconteceu o seu desligamento?</p>
+                      <p className="text-[#050C3B] font-serif text-2xl font-bold mb-8 leading-tight text-center">Como aconteceu a sua demissão?</p>
                       <div className="grid gap-3">
                         {[
                           { label: "Fui demitida pela empresa", icon: "🏢" },
-                          { label: "Pedi demissão sem saber que estava grávida", icon: "🤰" },
+                          { label: "Pedi demissão sem assistência do sindicato", icon: "⚖️" },
                           { label: "Pedi demissão por pressão ou mudança", icon: "⚖️" },
                           { label: "Ainda não fui demitida, mas sofro pressão", icon: "⚠️" }
                         ].map((opt) => (
@@ -774,7 +956,7 @@ export default function App() {
                     onClick={() => { setIsSurveyOpen(false); setIsThankYouOpen(true); }}
                     className="w-full bg-[#050C3B] text-white font-bold py-7 rounded-[1.5rem] shadow-2xl hover:bg-[#0a1564] transition-all transform hover:-translate-y-1 text-lg"
                  >
-                   QUERO ORIENTAÇÃO MESMO ASSIM
+                   RECEBER ORIENTAÇÃO MESMO ASSIM
                  </button>
               </div>
             )}
