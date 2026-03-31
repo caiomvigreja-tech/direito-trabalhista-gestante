@@ -37,14 +37,21 @@ export default function App() {
 
   // Handlers
   const maskPhone = (value: string) => {
-    const numbers = value.replace(/\D/g, '');
-    if (numbers.length <= 11) {
-      return numbers
-        .replace(/(\d{2})(\d)/, "($1) $2")
-        .replace(/(\d{5})(\d)/, "$1-$2")
-        .replace(/(-\d{4})\d+?$/, "$1");
+    // Keep only numbers
+    let numbers = value.replace(/\D/g, '');
+    
+    // Brazilian format (XX) XXXXX-XXXX
+    if (numbers.length > 11) numbers = numbers.slice(0, 11);
+    
+    if (numbers.length > 10) {
+      return numbers.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+    } else if (numbers.length > 6) {
+      return numbers.replace(/(\d{2})(\d{4})(\d{0,4})/, "($1) $2-$3");
+    } else if (numbers.length > 2) {
+      return numbers.replace(/(\d{2})(\d{0,5})/, "($1) $2");
+    } else {
+      return numbers;
     }
-    return value.slice(0, 15);
   };
 
   const handlePhoneChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,16 +80,21 @@ export default function App() {
         .select()
         .single();
 
-      if (error) throw error;
-      if (data) setCurrentLeadId(data.id);
+      if (error) {
+        console.warn('Silent failure on lead capture:', error);
+      } else if (data) {
+        setCurrentLeadId(data.id);
+      }
       
+      // We always open the survey to not block the user, even if Supabase failed
       setIsSurveyOpen(true);
       setCurrentSurveyStep(1);
       setSurveyDeadlineAlert(false);
-    } catch (error) {
-      console.error('Erro ao salvar lead:', error);
+    } catch (err) {
+      console.error('Erro ao salvar lead:', err);
       // Fallback: even if supabase fails, we still want to show the survey to not block the user
       setIsSurveyOpen(true);
+      setCurrentSurveyStep(1);
     } finally {
       setIsSubmitting(false);
     }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronRight, Globe, ArrowUpRight } from 'lucide-react';
+import { ChevronDown, Globe, ArrowUpRight } from 'lucide-react';
 
 interface FaqSectionProps {
   scrollToContact: () => void;
@@ -51,8 +51,8 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ scrollToContact }) => {
                 <span className={`font-sans font-bold text-lg md:text-xl ${openFaqIndex === i ? "text-[#C9A44C]" : "text-[#050C3B]"}`}>
                   {faq.q}
                 </span>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${openFaqIndex === i ? "bg-[#C9A44C] text-[#050C3B]" : "bg-gray-50 text-[#050C3B]"}`}>
-                  <ChevronRight className={`w-5 h-5 flex-shrink-0 ${openFaqIndex === i ? 'rotate-180' : ''}`} />
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${openFaqIndex === i ? "bg-[#C9A44C] text-[#050C3B] rotate-180" : "bg-gray-50 text-[#050C3B]"}`}>
+                  <ChevronDown className="w-5 h-5 flex-shrink-0" />
                 </div>
               </button>
               <div 
