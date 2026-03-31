@@ -19,27 +19,6 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = React.memo(({
 }) => {
   return (
     <>
-      {/* Alerta de Prazo finalizado (Bloco Todo Vermelho Elegante) */}
-      <section className="py-20 px-4 bg-[#b25553] text-white relative overflow-hidden antialiased">
-        <div className="max-w-4xl mx-auto text-center flex flex-col items-center relative z-10">
-          {/* Alert-style Title container */}
-          <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm border border-white/20 px-6 py-3 rounded-full mb-8">
-            <AlertTriangle className="w-5 h-5 text-[#EBCB8D]" />
-            <h2 className="font-sans text-sm md:text-base font-black tracking-[0.2em] uppercase whitespace-nowrap">
-              Atenção: seu prazo está diminuindo.
-            </h2>
-          </div>
-          <div className="max-w-2xl mx-auto">
-            <p className="text-white font-medium text-base md:text-lg leading-relaxed font-sans">
-              A lei trabalhista estabelece um prazo; que começou a correr na data da demissão - quanto antes você agir, mais chances (Art. 11 da CLT).
-            </p>
-          </div>
-        </div>
-
-        {/* Subtle Textured Background for elegance */}
-        <div className="absolute inset-0 opacity-[0.04] pointer-events-none bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)] bg-[size:16px_16px]" />
-      </section>
-
       {/* BLOCO FINAL: CONVERSÃO E GALERIA */}
       <section className="py-24 md:py-32 px-4 relative overflow-hidden antialiased">
         {/* Background Image at full opacity */}
@@ -48,6 +27,8 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = React.memo(({
             src="/images/Edificio Lisboa2.webp" 
             alt="Edifício Lisboa" 
             className="w-full h-full object-cover opacity-100"
+            loading="lazy"
+            decoding="async"
           />
         </div>
 
@@ -78,6 +59,27 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = React.memo(({
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Alerta de Prazo finalizado (Bloco Todo Vermelho Elegante) - Movido para o final */}
+      <section className="py-20 px-4 bg-[#b25553] text-white relative overflow-hidden antialiased">
+        <div className="max-w-4xl mx-auto text-center flex flex-col items-center relative z-10">
+          {/* Alert-style Title container */}
+          <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm border border-white/20 px-6 py-3 rounded-full mb-8">
+            <AlertTriangle className="w-5 h-5 text-[#EBCB8D]" />
+            <h2 className="font-sans text-sm md:text-base font-black tracking-[0.2em] uppercase whitespace-nowrap">
+              Atenção: seu prazo está diminuindo.
+            </h2>
+          </div>
+          <div className="max-w-2xl mx-auto">
+            <p className="text-white font-medium text-base md:text-lg leading-relaxed font-sans">
+              A lei trabalhista estabelece um prazo; que começou a correr na data da demissão - quanto antes você agir, mais chances (Art. 11 da CLT).
+            </p>
+          </div>
+        </div>
+
+        {/* Subtle Textured Background for elegance */}
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none bg-[radial-gradient(circle_at_center,_white_1px,_transparent_1px)] bg-[size:16px_16px]" />
       </section>
     </>
   );

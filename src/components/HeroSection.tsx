@@ -24,6 +24,8 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
           src="/images/Fundo BG.webp"
           alt="Fundo Gestante"
           className="w-full h-full object-cover object-center"
+          loading="eager"
+          decoding="sync"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#050C3B]/60 via-[#050C3B]/30 to-transparent" />
       </div>
@@ -55,7 +57,7 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
 
       {/* Background Logo Watermark */}
       <div className="absolute opacity-5 -right-20 -bottom-20 pointer-events-none">
-        <img src="/images/logo-fundo-transparente.png" alt="" className="w-96 h-96 object-contain" />
+        <img src="/images/logo-fundo-transparente.png" alt="" className="w-96 h-96 object-contain" loading="lazy" decoding="async" />
       </div>
     </section>
   );

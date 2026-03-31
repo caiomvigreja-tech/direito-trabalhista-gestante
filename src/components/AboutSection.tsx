@@ -12,9 +12,11 @@ export const AboutSection: React.FC<AboutSectionProps> = React.memo(({ scrollToC
         <div className="bg-white rounded-[2rem] overflow-hidden shadow-xl flex flex-col md:flex-row border border-gray-100">
           <div className="md:w-2/5 relative h-[500px] md:h-auto overflow-hidden group">
             <img 
-              src="/images/dr-filipe-cunha.png" 
+              src="/images/dr-filipe-cunha.jpg" 
               alt="Dr. Filipe Cunha" 
               className="absolute inset-0 w-full h-full object-cover object-top" 
+              loading="lazy"
+              decoding="async"
             />
             
             {/* Circular Rotating Badge with Glassmorphism */}
@@ -42,6 +44,8 @@ export const AboutSection: React.FC<AboutSectionProps> = React.memo(({ scrollToC
                     src="/images/logo-branco-fundo-transparente.png" 
                     alt="Logo Cunhas & Cunha" 
                     className="w-full h-auto object-contain drop-shadow-lg"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
               </div>
