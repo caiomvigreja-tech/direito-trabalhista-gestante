@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, Phone, MapPin } from 'lucide-react';
+import { Mail, Phone, MapPin, FileText } from 'lucide-react';
 
 interface FooterProps {
   openLegalModal: (type: 'privacy' | 'terms' | 'ethics') => void;
@@ -22,7 +22,6 @@ export const Footer: React.FC<FooterProps> = React.memo(({ openLegalModal }) => 
               <p className="text-sm leading-relaxed text-gray-400 font-sans">
                 Especialista em Direito do Trabalho para Gestantes. Defendendo seu futuro e o do seu bebê.
               </p>
-              <p className="text-sm opacity-60 font-sans">CNPJ: 46.494.521/0001-43</p>
             </div>
           </div>
 
@@ -41,6 +40,10 @@ export const Footer: React.FC<FooterProps> = React.memo(({ openLegalModal }) => 
               <li className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-[#C9A44C] flex-shrink-0" />
                 <span className="text-sm">Av. Presidente Vargas 590</span>
+              </li>
+              <li className="flex items-center space-x-3">
+                <FileText className="w-5 h-5 text-[#C9A44C]" />
+                <span className="text-sm">CNPJ: 46.494.521/0001-43</span>
               </li>
             </ul>
           </div>
