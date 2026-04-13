@@ -35,7 +35,7 @@ export const Footer: React.FC<FooterProps> = React.memo(({ openLegalModal }) => 
               </li>
               <li className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-[#C9A44C]" />
-                <span className="text-sm">(21) 97350-8920</span>
+                <span className="text-sm">(21) 99703-5823</span>
               </li>
               <li className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-[#C9A44C] flex-shrink-0" />
