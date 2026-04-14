@@ -1,1 +1,1 @@
-{ "routes": [ { "handle": "filesystem" }, { "src": "/.*", "dest": "/index.html" } ] }
+{"rewrites": [{"source": "/crm/(.*)", "destination": "/index.html"}, {"source": "/crm", "destination": "/index.html"}]}
