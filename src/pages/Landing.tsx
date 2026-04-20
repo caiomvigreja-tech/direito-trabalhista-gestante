@@ -31,7 +31,7 @@ export default function Landing() {
 
   // Initialize
   useEffect(() => {
-    // Basic setup if needed
+    document.title = 'Advocacia para Gestantes';
   }, []);
 
   // Handlers
