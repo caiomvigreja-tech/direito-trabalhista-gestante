@@ -1,15 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://iqdgxcxcklcwthfzygui.supabase.co';
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlxZGd4Y3hja2xjd3RoZnp5Z3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4NzIxOTgsImV4cCI6MjA5MDQ0ODE5OH0.pvIiIyX7wT9YcDbs1pbbwkN0pQG1JUydiuN3l10hIRA';
+// SECURE: Use environment variables, never hardcode credentials!
+const supabaseUrl = process.env.SUPABASE_URL || 'YOUR_SUPABASE_URL';
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'YOUR_SUPABASE_ANON_KEY';
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 async function createUser() {
   console.log('Creating user...');
   const { data, error } = await supabase.auth.signUp({
-    email: 'caiomvigreja@gmail.com',
-    password: '@!gestante',
+    email: process.env.ADMIN_EMAIL || 'admin@example.com',
+    password: process.env.ADMIN_PASSWORD || 'your-secure-password',
   });
   
   if (error) {
@@ -19,4 +20,5 @@ async function createUser() {
   }
 }
 
-createUser();
+// Uncomment and provide environment variables to run
+// createUser();
