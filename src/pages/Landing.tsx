@@ -20,7 +20,6 @@ export default function Landing() {
   // Modal / Survey states
   const [isSurveyOpen, setIsSurveyOpen] = useState(false);
   const [currentSurveyStep, setCurrentSurveyStep] = useState(1);
-  const [surveyDeadlineAlert, setSurveyDeadlineAlert] = useState(false);
   const [isThankYouOpen, setIsThankYouOpen] = useState(false);
   const [legalModal, setLegalModal] = useState<{ isOpen: boolean, title: string, content: React.ReactNode } | null>(null);
 
@@ -89,7 +88,7 @@ export default function Landing() {
       // We always open the survey to not block the user, even if Supabase failed
       setIsSurveyOpen(true);
       setCurrentSurveyStep(1);
-      setSurveyDeadlineAlert(false);
+      // No more deadline alert state here
     } catch (err) {
       console.error('Erro ao salvar lead:', err);
       // Fallback: even if supabase fails, we still want to show the survey to not block the user
@@ -106,8 +105,8 @@ export default function Landing() {
         const updateData: any = {};
         updateData[`survey_step_${step}`] = optionValue;
         
-        if (step === 1 && optionValue === "Mais de 2 anos") {
-          updateData.deadline_alert = true;
+        if (step === 1) {
+          // No more deadline alert logic here
         }
 
         const { error } = await supabase
@@ -121,10 +120,7 @@ export default function Landing() {
       }
     }
 
-    if (step === 1 && optionValue === "Mais de 2 anos") {
-      setSurveyDeadlineAlert(true);
-      return;
-    }
+    // Removed deadline alert check here to follow normal flow
     
     if (currentSurveyStep < 3) {
       setCurrentSurveyStep(prev => prev + 1);
@@ -230,8 +226,6 @@ export default function Landing() {
         onClose={() => setIsSurveyOpen(false)}
         currentStep={currentSurveyStep}
         onOptionSelect={handleSurveyOption}
-        deadlineAlert={surveyDeadlineAlert}
-        onFinishAlert={() => { setIsSurveyOpen(false); setIsThankYouOpen(true); }}
       />
 
       <ThankYouModal 
@@ -245,6 +239,20 @@ export default function Landing() {
         title={legalModal?.title || ''}
         content={legalModal?.content || null}
       />
+
+      {/* Floating WhatsApp Button */}
+      <a 
+        href="https://wa.me/5521997035823?text=Olá!%20Encontrei%20seu%20site%20e%20gostaria%20de%20falar%20sobre%20meus%20direitos%20como%20gestante."
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-[90] w-16 h-16 md:w-20 md:h-20 drop-shadow-2xl hover:scale-110 transition-all duration-300 group active:scale-95"
+        aria-label="Falar no WhatsApp"
+      >
+        <img src="/images/whatsapp.svg" alt="WhatsApp" className="w-full h-full object-contain" />
+        <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-white text-[#050C3B] px-4 py-2 rounded-lg text-sm font-bold shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-gray-100">
+          Falar com Especialista
+        </span>
+      </a>
     </div>
   );
 }
