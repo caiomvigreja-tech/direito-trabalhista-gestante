@@ -79,12 +79,15 @@ export default function Landing() {
         .select()
         .single();
 
-      if (error) {
-        console.warn('Silent failure on lead capture:', error);
-      } else if (data) {
+      if (data) {
         setCurrentLeadId(data.id);
       }
       
+      // Track Lead event in Meta Pixel
+      if (typeof (window as any).fbq === 'function') {
+        (window as any).fbq('track', 'Lead');
+      }
+
       // We always open the survey to not block the user, even if Supabase failed
       setIsSurveyOpen(true);
       setCurrentSurveyStep(1);
