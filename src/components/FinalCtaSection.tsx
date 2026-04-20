@@ -34,7 +34,7 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = React.memo(({
 
         <div className="max-w-7xl mx-auto text-center relative z-10">
           <div className="mb-10">
-            <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-3 tracking-tight max-w-4xl mx-auto leading-tight text-pretty">
+            <h2 className="font-serif text-[clamp(1.625rem,8vw,1.875rem)] md:text-5xl font-bold text-white mb-3 tracking-tight max-w-4xl mx-auto leading-tight text-pretty">
               Consulte um advogado de confiança e descubra agora se você pode ter direito.
             </h2>
             <p className="text-white/70 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-light font-sans">

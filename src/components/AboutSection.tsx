@@ -14,14 +14,14 @@ export const AboutSection: React.FC<AboutSectionProps> = React.memo(({ scrollToC
             <img 
               src="/images/dr-filipe-cunha.jpg" 
               alt="Dr. Filipe Cunha" 
-              className="absolute inset-0 w-full h-full object-cover object-top" 
+              className="absolute inset-0 w-full h-full object-cover object-top scale-110" 
               loading="lazy"
               decoding="async"
             />
             
             {/* Circular Rotating Badge with Glassmorphism */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#050C3B]/60 via-transparent to-transparent" />
-            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 md:left-10 md:translate-x-0 group/badge">
+            <div className="absolute bottom-6 left-6 md:bottom-10 md:left-10 group/badge">
               <div className="relative w-36 h-36 md:w-44 md:h-44 flex items-center justify-center">
                 {/* Frosted Glass Circle */}
                 <div className="absolute inset-0 bg-white/10 backdrop-blur-lg border border-white/20 rounded-full shadow-2xl overflow-hidden" />
@@ -52,9 +52,9 @@ export const AboutSection: React.FC<AboutSectionProps> = React.memo(({ scrollToC
             </div>
           </div>
           <div className="md:w-3/5 p-10 md:p-14 flex flex-col justify-center">
-            <h4 className="text-[#C9A44C] font-bold tracking-[0.2em] uppercase text-base mb-3 font-sans">Quem vai cuidar do seu caso</h4>
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-[#050C3B] mb-2">Dr. Filipe Cunha</h2>
-            <p className="text-gray-600 mb-8 font-medium text-lg leading-relaxed font-sans">Advogado Trabalhista · OAB/RJ Nº 221.727</p>
+            <h4 className="text-[#C9A44C] font-bold tracking-widest md:tracking-[0.2em] uppercase text-[13px] md:text-base mb-3 font-sans">Quem vai cuidar do seu caso</h4>
+            <h2 className="font-serif text-[clamp(1.95rem,9.6vw,2.25rem)] md:text-[3.6rem] font-bold text-[#050C3B] mb-2">Dr. Filipe Cunha</h2>
+            <p className="text-gray-600 mb-8 font-medium text-sm md:text-lg leading-relaxed font-sans whitespace-nowrap">Advogado Trabalhista · OAB/RJ Nº 221.727</p>
 
             <div className="flex flex-wrap gap-3 mb-10 font-sans">
               <span className="bg-[#050C3B]/5 text-[#050C3B] px-4 py-1.5 rounded-full text-base font-semibold border border-[#050C3B]/10">+ 12 anos de experiência</span>
@@ -69,7 +69,7 @@ export const AboutSection: React.FC<AboutSectionProps> = React.memo(({ scrollToC
               <p>Além disso, sou casado com Dra. Jussara, também advogada, e pai do Paulo Miguel. Sei o que significa querer proteger quem você ama, e é com esse mesmo cuidado que atendemos cada cliente.</p>
               <div className="pt-8 border-t border-gray-100 mt-10 relative">
                 <Quote className="absolute -top-4 -left-2 w-10 h-10 text-[#C9A44C]/20" />
-                <p className="font-serif font-bold text-[#050C3B] text-2xl italic leading-tight pl-6 border-l-4 border-[#C9A44C]">
+                <p className="font-serif font-semibold text-[#050C3B] text-xl md:text-2xl leading-relaxed pl-6 border-l-4 border-[#C9A44C]">
                   "Muitas mulheres que atendo acham que perderam o direito. Na maioria dos casos, não perderam. É importante agir rápido."
                 </p>
               </div>
@@ -80,14 +80,14 @@ export const AboutSection: React.FC<AboutSectionProps> = React.memo(({ scrollToC
         <div className="mt-12 text-center">
           <button 
             onClick={scrollToContact}
-            className="w-full md:w-auto bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-8 rounded-full shadow-xl transform transition hover:-translate-y-1 inline-flex items-center justify-between group font-sans"
+            className="w-full md:w-auto bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-8 rounded-full shadow-xl transform transition hover:-translate-y-1 inline-flex items-center justify-center gap-4 group font-sans active:scale-95"
           >
-            <span className="mr-6 uppercase font-bold tracking-widest text-base">INICIAR MINHA ANÁLISE</span>
+            <span className="uppercase font-bold tracking-widest text-base">INICIAR MINHA ANÁLISE</span>
             <div className="bg-white rounded-full p-2 flex items-center justify-center shadow-sm group-hover:bg-[#5D4017] group-hover:text-white transition-all">
               <ArrowUpRight className="w-5 h-5" />
             </div>
           </button>
-          <div className="mt-4 flex items-center justify-center gap-2 text-[11px] font-bold tracking-[0.2em] uppercase text-gray-400 font-sans">
+          <div className="mt-4 flex items-center justify-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400 font-sans">
             <Globe className="w-3.5 h-3.5 text-[#C9A44C]" />
             <span>Atendimento rápido para todo o Brasil</span>
           </div>

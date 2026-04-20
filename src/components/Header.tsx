@@ -17,20 +17,20 @@ export const Header: React.FC<HeaderProps> = ({ scrollToContact, calcRef }) => {
   }, []);
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-[100] ${isScrolled ? 'bg-[#050C3B]/95 backdrop-blur-md py-4 shadow-2xl border-b border-white/5' : 'bg-transparent py-8'}`}>
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <div className="flex items-center gap-5 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+    <header className={`hidden md:block fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${isScrolled ? 'bg-[#050C3B]/95 backdrop-blur-md py-3 shadow-2xl border-b border-white/5' : 'bg-[#050C3B]/90 backdrop-blur-md py-4'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+        <div className="flex items-center gap-3 sm:gap-5 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           <img 
             src="/images/logo-branco-fundo-transparente.png" 
             alt="Filipe Cunha Advocacia Logo" 
-            className={`h-10 md:h-12 w-auto object-contain transition-all duration-500 ${isScrolled ? 'scale-95' : 'scale-100'}`} 
+            className={`h-9 md:h-12 w-auto object-contain transition-all duration-500 ${isScrolled ? 'scale-95' : 'scale-100'}`} 
           />
-          <div className="hidden md:flex flex-col justify-center">
+          <div className="flex flex-col justify-center">
             <div className="flex items-center gap-1.5">
-              <span className="text-white font-bold text-sm md:text-base">Dr. Filipe Cunha</span>
-              <span className="text-white/70 text-[10px] md:text-xs">• OAB/RJ 221.727</span>
+              <span className="text-white font-bold text-xs md:text-base">Dr. Filipe Cunha</span>
+              <span className="text-white/70 text-[8px] md:text-xs whitespace-nowrap">• OAB/RJ 221.727</span>
             </div>
-            <span className="text-white/40 text-[10px] md:text-xs font-medium">Advogado da Gestante</span>
+            <span className="text-white/40 text-[8px] md:text-xs font-medium uppercase tracking-wider">Advogado da Gestante</span>
           </div>
         </div>
         

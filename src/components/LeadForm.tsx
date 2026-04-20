@@ -42,19 +42,20 @@ export const LeadForm: React.FC<LeadFormProps> = ({
       </div>
       <button 
         type="submit" 
-        className="w-full bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-6 rounded-full shadow-lg flex items-center justify-between group mt-2 disabled:opacity-50"
+        className="w-full bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-4 sm:px-6 rounded-full shadow-lg flex items-center justify-between group mt-2 disabled:opacity-50"
         disabled={isLoading}
       >
-        <span className="flex-grow text-center ml-8 uppercase font-bold tracking-widest text-base font-sans">
+        <div className="w-9 h-9 hidden sm:block" /> {/* Spacer for centering on desktop */}
+        <span className="flex-grow text-center uppercase font-bold tracking-wider sm:tracking-widest text-sm sm:text-base font-sans whitespace-nowrap px-2">
           {isLoading ? 'ENVIANDO...' : 'INICIAR MINHA ANÁLISE'}
         </span>
-        <div className="bg-white rounded-full p-2 flex items-center justify-center shadow-sm">
+        <div className="bg-white rounded-full p-2 flex items-center justify-center shadow-sm flex-shrink-0">
           <ArrowUpRight className="w-5 h-5" />
         </div>
       </button>
-      <div className="mt-4 flex items-center justify-center gap-2 text-[11px] font-bold tracking-[0.2em] uppercase text-gray-400 font-sans">
+      <div className="mt-4 flex items-center justify-center gap-2 text-[9px] sm:text-[10px] font-bold tracking-widest sm:tracking-[0.2em] uppercase text-gray-400 font-sans">
         <Globe className="w-3.5 h-3.5 text-[#C9A44C]" />
-        <span>Atendimento rápido para todo o Brasil</span>
+        <span className="whitespace-nowrap">Atendimento rápido para todo o Brasil</span>
       </div>
     </form>
   );

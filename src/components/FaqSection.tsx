@@ -10,24 +10,44 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ scrollToContact }) => {
 
   const faqs = [
     { 
-      q: 'Assinei a rescisão. Ainda tenho direito?', 
-      a: "Sim. Nenhuma assinatura apaga um direito garantido pela Constituição Federal (art. 10, II, 'b' do ADCT), que protege a gestante contra demissões arbitrárias."
+      q: 'Eu pedi demissão porque não sabia da gravidez. Perdi meus direitos?', 
+      a: "Não. O pedido de demissão da gestante pode ser anulado se não tiver acompanhamento do sindicato. Você ainda pode ter direito à sua indenização total."
     },
     { 
-      q: 'Eu que pedi demissão. Perdi tudo?', 
-      a: "Não necessariamente. Conforme a jurisprudência consolidada do TST, se o pedido foi feito sob pressão, por desconhecimento da gravidez ou sem a devida assistência sindical, ele pode ser revertido judicialmente."
+      q: 'A empresa não sabia que eu estava grávida na demissão. Isso muda algo?', 
+      a: "Nada. O que importa para a lei é se você já estava grávida no dia da saída, independentemente de você ou o patrão saberem. O direito à indenização permanece."
     },
     { 
-      q: 'Era contrato de experiência ou aprendizagem. Tenho direito?', 
-      a: "Sim. A proteção à maternidade é um direito social que prevalece sobre a modalidade do contrato, abrangendo inclusive contratos temporários e de experiência (Tema 163 do TST)."
+      q: 'Eu trabalhava sem carteira assinada. Também tenho direito?', 
+      a: "Sim. A falta de registro é um erro da empresa e não retira sua proteção. Comprovando que você trabalhava lá, todos os seus direitos de gestante são garantidos."
     },
     { 
-      q: 'A empresa não sabia que eu estava grávida. Isso muda algo?', 
-      a: "Não. O Supremo Tribunal Federal (STF) decidiu no Tema 497 que o direito à estabilidade independe do conhecimento prévio do empregador ou da própria gestante."
+      q: 'Estava em contrato de experiência ou era Jovem Aprendiz. Estou protegida?', 
+      a: "Sim. A justiça garante estabilidade e indenização para gestantes mesmo em contratos por tempo determinado, como experiência ou aprendizagem."
     },
     { 
-      q: 'Sou obrigada a voltar para a empresa se eu ganhar a ação?', 
-      a: "Não. O entendimento do TST no Tema 134 permite que a gestante opte pela indenização financeira em vez do retorno, especialmente quando a relação de confiança com a empresa foi rompida."
+      q: 'Já assinei a rescisão e recebi meus valores. Ainda posso entrar com a ação?', 
+      a: "Com certeza. A assinatura da rescisão não impede que você busque a indenização pela estabilidade que foi desrespeitada."
+    },
+    { 
+      q: 'Vocês atendem grávidas de outros estados?', 
+      a: "Sim, atendemos em todo o Brasil. Como os processos hoje são 100% digitais, resolvemos tudo com total segurança e comodidade para você."
+    },
+    { 
+      q: 'Se eu ganhar a ação, serei obrigada a voltar para a empresa?', 
+      a: "Não. Você não será obrigada a voltar. O objetivo da ação é converter seu direito em indenização em dinheiro, garantindo sua paz e o sustento do seu bebê."
+    },
+    { 
+      q: 'E se a empresa fechou ou o dono sumiu?', 
+      a: "A lei protege você. Se a empresa não tiver bens, o processo pode atingir o patrimônio pessoal dos sócios para garantir que você receba seu dinheiro."
+    },
+    { 
+      q: 'É muito difícil provar que eu estava grávida na época?', 
+      a: "É muito simples. Usamos documentos básicos que você já possui ou consegue facilmente para comprovar o período da gestação e garantir seu direito."
+    },
+    { 
+      q: 'Como faço para saber se o meu caso tem direito à indenização?', 
+      a: "Basta clicar no botão \"INICIAR MINHA ANÁLISE\". Nossa equipe faz uma verificação rápida e segura dos seus dados para confirmar o valor que você pode receber."
     }
   ];
 
@@ -36,7 +56,7 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ scrollToContact }) => {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16 px-4">
           <span className="text-[#A6822E] font-bold tracking-[0.2em] uppercase text-base mb-3 block font-sans">Dúvidas Frequentes</span>
-          <h2 className="font-serif text-3xl md:text-5xl font-bold text-[#050C3B]">
+          <h2 className="font-serif text-[clamp(1.625rem,8vw,1.875rem)] md:text-5xl font-bold text-[#050C3B]">
             Perguntas e Respostas
           </h2>
         </div>
@@ -71,14 +91,14 @@ export const FaqSection: React.FC<FaqSectionProps> = ({ scrollToContact }) => {
         <div className="mt-16 text-center">
           <button 
             onClick={scrollToContact}
-            className="w-full md:w-auto bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-10 rounded-full shadow-xl inline-flex items-center justify-between group font-sans"
+            className="w-full md:w-auto bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] font-bold py-4 px-6 md:px-10 rounded-full shadow-xl inline-flex items-center justify-center gap-4 group font-sans active:scale-95"
           >
-            <span className="mr-8 uppercase font-bold tracking-widest text-base">INICIAR MINHA ANÁLISE</span>
+            <span className="uppercase font-bold tracking-widest text-base whitespace-nowrap">INICIAR MINHA ANÁLISE</span>
             <div className="bg-white rounded-full p-2 flex items-center justify-center shadow-sm">
               <ArrowUpRight className="w-5 h-5" />
             </div>
           </button>
-          <div className="mt-4 flex items-center justify-center gap-2 text-[11px] font-bold tracking-[0.2em] uppercase text-gray-400 font-sans">
+          <div className="mt-4 flex items-center justify-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-gray-400 font-sans">
             <Globe className="w-3.5 h-3.5 text-[#C9A44C]" />
             <span>Atendimento rápido para todo o Brasil</span>
           </div>

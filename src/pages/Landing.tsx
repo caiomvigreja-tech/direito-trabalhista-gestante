@@ -197,8 +197,6 @@ export default function Landing() {
           isLoading={isSubmitting}
         />
 
-        <RulesSection scrollToContact={scrollToContact} />
-
         <CalculatorSection 
           calcRef={calcRef}
           scrollToContact={scrollToContact}
@@ -209,6 +207,8 @@ export default function Landing() {
           setShowVideo={setShowVideo}
           scrollToContact={scrollToContact}
         />
+
+        <RulesSection scrollToContact={scrollToContact} />
 
         <AboutSection scrollToContact={scrollToContact} />
 
