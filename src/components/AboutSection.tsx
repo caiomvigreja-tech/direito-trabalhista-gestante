@@ -13,7 +13,7 @@ export const AboutSection: React.FC<AboutSectionProps> = React.memo(({ scrollToC
           <div className="md:w-2/5 relative h-[500px] md:h-auto overflow-hidden group">
             <img 
               src="/images/dr-filipe-cunha.jpg" 
-              alt="Dr. Filipe Cunha" 
+              alt="Dr. Filipe Cunha - Advogado Especialista em Direitos da Gestante" 
               className="absolute inset-0 w-full h-full object-cover object-top scale-110" 
               loading="lazy"
               decoding="async"

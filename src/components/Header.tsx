@@ -22,7 +22,7 @@ export const Header: React.FC<HeaderProps> = ({ scrollToContact, calcRef }) => {
         <div className="flex items-center gap-3 sm:gap-5 cursor-pointer group" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
           <img 
             src="/images/logo-branco-fundo-transparente.png" 
-            alt="Filipe Cunha Advocacia Logo" 
+            alt="Filipe Cunha Advocacia - Especialista em Direitos da Gestante" 
             className={`h-9 md:h-12 w-auto object-contain transition-all duration-500 ${isScrolled ? 'scale-95' : 'scale-100'}`} 
           />
           <div className="flex flex-col justify-center">

@@ -24,7 +24,7 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
           <source media="(max-width: 767px)" srcSet="/images/fundo-bg-mobile.webp" />
           <img
             src="/images/Fundo BG.webp"
-            alt="Fundo Gestante"
+            alt="Especialista em direitos da gestante e indenização trabalhista"
             className="w-full h-full object-cover object-top md:object-center"
             loading="eager"
             decoding="sync"

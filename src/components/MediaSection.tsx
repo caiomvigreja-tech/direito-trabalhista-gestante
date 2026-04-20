@@ -53,7 +53,7 @@ export const MediaSection: React.FC<MediaSectionProps> = React.memo(({
                 <>
                   <img 
                     src="https://img.youtube.com/vi/PiXdoNtGgOI/maxresdefault.jpg" 
-                    alt="Preview Matéria SBT" 
+                    alt="Matéria do SBT sobre direitos da gestante e indenização" 
                     className="w-full h-full object-cover opacity-80" 
                     loading="lazy"
                     decoding="async"
@@ -82,7 +82,7 @@ export const MediaSection: React.FC<MediaSectionProps> = React.memo(({
             <div className="mb-6">
               <img 
                 src="/images/SBT_News_2025.svg.png" 
-                alt="SBT News Logo" 
+                alt="SBT News - Repercussão de direitos trabalhistas" 
                 className="h-10 w-auto object-contain rounded-lg"
                 loading="lazy"
                 decoding="async"
