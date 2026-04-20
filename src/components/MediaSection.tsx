@@ -74,7 +74,7 @@ export const MediaSection: React.FC<MediaSectionProps> = React.memo(({
                 </div>
               )}
             </div>
-            <p className="text-gray-500 text-sm md:text-base italic font-sans text-center lg:text-left opacity-80 mt-4 px-4 lg:px-0">
+            <p className="text-gray-500 text-sm md:text-base italic font-sans text-center opacity-80 mt-4 px-4 lg:px-0">
               Assista essa matéria do SBT para entender.
             </p>
           </div>

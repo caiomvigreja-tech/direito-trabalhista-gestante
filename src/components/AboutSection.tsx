@@ -63,7 +63,7 @@ export const AboutSection: React.FC<AboutSectionProps> = React.memo(({ scrollToC
               <span className="bg-[#C9A44C]/10 text-[#C9A44C] px-4 py-1.5 rounded-full text-base font-semibold border border-[#C9A44C]/20">Advogado da Gestante</span>
             </div>
 
-            <div className="space-y-6 text-gray-600 leading-relaxed text-lg font-light font-sans">
+            <div className="space-y-6 text-gray-600 leading-relaxed text-base md:text-lg font-light font-sans">
               <p>Atuo no Direito do Trabalho há 12 anos, com experiência consolidada na defesa dos direitos de gestantes.</p>
               <p>Escolhi dedicar meu trabalho à defesa de gestantes porque acredito que nenhuma mulher deveria chegar ao parto sem a segurança que a lei garante.</p>
               <p>Além disso, sou casado com Dra. Jussara, também advogada, e pai do Paulo Miguel. Sei o que significa querer proteger quem você ama, e é com esse mesmo cuidado que atendemos cada cliente.</p>
