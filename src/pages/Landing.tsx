@@ -2,16 +2,17 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { Header } from '../components/Header';
 import { HeroSection } from '../components/HeroSection';
-import { RulesSection } from '../components/RulesSection';
-import { CalculatorSection } from '../components/CalculatorSection';
-import { MediaSection } from '../components/MediaSection';
-import { AboutSection } from '../components/AboutSection';
-import { FaqSection } from '../components/FaqSection';
-import { FinalCtaSection } from '../components/FinalCtaSection';
 import { Footer } from '../components/Footer';
 import { SurveyModal } from '../components/SurveyModal';
 import { ThankYouModal } from '../components/ThankYouModal';
 import { LegalModal } from '../components/LegalModal';
+
+const RulesSection = React.lazy(() => import('../components/RulesSection').then(m => ({ default: m.RulesSection })));
+const CalculatorSection = React.lazy(() => import('../components/CalculatorSection').then(m => ({ default: m.CalculatorSection })));
+const MediaSection = React.lazy(() => import('../components/MediaSection').then(m => ({ default: m.MediaSection })));
+const AboutSection = React.lazy(() => import('../components/AboutSection').then(m => ({ default: m.AboutSection })));
+const FaqSection = React.lazy(() => import('../components/FaqSection').then(m => ({ default: m.FaqSection })));
+const FinalCtaSection = React.lazy(() => import('../components/FinalCtaSection').then(m => ({ default: m.FinalCtaSection })));
 
 export default function Landing() {
   // Refs
@@ -196,33 +197,37 @@ export default function Landing() {
           isLoading={isSubmitting}
         />
 
-        <CalculatorSection 
-          calcRef={calcRef}
-          scrollToContact={scrollToContact}
-        />
+        <React.Suspense fallback={<div className="py-20 text-center text-gray-400">Carregando...</div>}>
+          <CalculatorSection 
+            calcRef={calcRef}
+            scrollToContact={scrollToContact}
+          />
 
-        <MediaSection 
-          showVideo={showVideo}
-          setShowVideo={setShowVideo}
-          scrollToContact={scrollToContact}
-        />
+          <MediaSection 
+            showVideo={showVideo}
+            setShowVideo={setShowVideo}
+            scrollToContact={scrollToContact}
+          />
 
-        <RulesSection scrollToContact={scrollToContact} />
+          <RulesSection scrollToContact={scrollToContact} />
 
-        <AboutSection scrollToContact={scrollToContact} />
+          <AboutSection scrollToContact={scrollToContact} />
 
-        <FaqSection scrollToContact={scrollToContact} />
+          <FaqSection scrollToContact={scrollToContact} />
 
-        <FinalCtaSection 
-          formData={formData}
-          onNameChange={handleNameChange}
-          onPhoneChange={handlePhoneChange}
-          onSubmit={handleLeadCapture}
-          isLoading={isSubmitting}
-        />
+          <FinalCtaSection 
+            formData={formData}
+            onNameChange={handleNameChange}
+            onPhoneChange={handlePhoneChange}
+            onSubmit={handleLeadCapture}
+            isLoading={isSubmitting}
+          />
+        </React.Suspense>
       </main>
 
-      <Footer openLegalModal={openLegalModal} />
+      <React.Suspense fallback={null}>
+        <Footer openLegalModal={openLegalModal} />
+      </React.Suspense>
 
       <SurveyModal 
         isOpen={isSurveyOpen}
