@@ -38,7 +38,7 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = React.memo(({
               Consulte um advogado de confiança e descubra agora se você pode ter direito.
             </h2>
             <p className="text-white/70 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-light font-sans">
-              Nossa equipe de especialistas está à disposição para analisar o seu caso.
+              O Dr. Filipe Cunha e sua equipe estão à disposição para analisar o seu caso.
             </p>
           </div>
 
@@ -65,15 +65,18 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = React.memo(({
       <section className="py-20 px-4 bg-[#b25553] text-white relative overflow-hidden antialiased">
         <div className="max-w-4xl mx-auto text-center flex flex-col items-center relative z-10">
           {/* Alert-style Title container */}
-          <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm border border-white/20 px-6 py-3 rounded-full mb-8">
-            <AlertTriangle className="w-5 h-5 text-[#EBCB8D]" />
-            <h2 className="font-sans text-sm md:text-base font-black tracking-[0.2em] uppercase whitespace-nowrap">
+          <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm border border-white/20 px-6 md:px-7 py-2.5 md:py-3.5 rounded-full mb-8 max-w-full">
+            <AlertTriangle className="w-4 h-4 md:w-5 md:h-5 text-[#EBCB8D] shrink-0" />
+            <h2 className="font-sans text-[11px] md:text-[1.1rem] font-black tracking-widest md:tracking-[0.2em] uppercase whitespace-nowrap overflow-hidden text-ellipsis">
               Atenção: seu prazo está diminuindo.
             </h2>
           </div>
           <div className="max-w-2xl mx-auto">
             <p className="text-white font-medium text-base md:text-lg leading-relaxed font-sans">
-              A lei trabalhista estabelece um prazo; que começou a correr na data da demissão - quanto antes você agir, mais chances (Art. 11 da CLT).
+              A lei trabalhista estabelece um prazo que começou a correr na data da demissão - quanto antes você agir, mais chances.
+            </p>
+            <p className="mt-4 text-white/60 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] font-sans">
+              (Art. 11 da CLT)
             </p>
           </div>
         </div>

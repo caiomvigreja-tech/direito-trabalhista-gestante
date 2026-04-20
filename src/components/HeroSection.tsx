@@ -49,6 +49,7 @@ export const HeroSection: React.FC<HeroSectionProps> = React.memo(({
               onPhoneChange={onPhoneChange}
               onSubmit={onSubmit}
               isLoading={isLoading}
+              showTitle={false}
             />
           </div>
         </div>
