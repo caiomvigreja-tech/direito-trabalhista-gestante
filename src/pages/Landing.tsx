@@ -148,9 +148,8 @@ export default function Landing() {
     // Reset answers for new lead
     setSurveyAnswers({});
 
-    // Dispara notificação para Telegram IMEDIATAMENTE (sem travar o fluxo do usuário)
-    // Fazemos isso antes ou em paralelo para garantir que se o Supabase falhar, o lead ainda chegue no Telegram
-    sendTelegramNotification(formData.name, formData.phone);
+    // Dispara notificação para Telegram (aguardamos para garantir que saia na Vercel)
+    await sendTelegramNotification(formData.name, formData.phone);
     
     try {
       const { data, error } = await supabase
@@ -158,7 +157,7 @@ export default function Landing() {
         .insert([{ 
           name: formData.name, 
           phone: formData.phone,
-          status: 'Lead recebido' // Garantindo status inicial
+          status: 'Lead recebido'
         }])
         .select()
         .single();
