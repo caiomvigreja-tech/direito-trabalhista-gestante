@@ -80,7 +80,10 @@ export default function Landing() {
       return;
     }
 
-    const message = `🚀 *Novo Lead Capturado!*\n\n👤 *Nome:* ${name}\n📱 *WhatsApp:* ${phone}\n🔗 *Origem:* Landing Page Gestante`;
+    const message = `<b>🚀 Novo Lead Capturado!</b>\n\n` +
+                    `<b>👤 Nome:</b> ${name}\n` +
+                    `<b>📱 WhatsApp:</b> ${phone}\n` +
+                    `<b>🔗 Origem:</b> Landing Page Gestante`;
 
     try {
       console.log('Enviando notificação para Telegram...');
@@ -90,7 +93,7 @@ export default function Landing() {
         body: JSON.stringify({
           chat_id: chatId,
           text: message,
-          parse_mode: 'Markdown',
+          parse_mode: 'HTML',
         }),
       });
       
@@ -111,21 +114,26 @@ export default function Landing() {
 
     if (!token || !chatId) return;
 
-    const message = `📋 *Qualificação do Lead: ${name}*\n\n` +
-                    `❓ *Quando saiu da empresa?* \n${answers[1] || 'Não informado'}\n\n` +
-                    `❓ *Qual foi o motivo?* \n${answers[2] || 'Não informado'}\n\n` +
-                    `❓ *Qual era o salário?* \n${answers[3] || 'Não informado'}`;
+    const message = `<b>📋 Qualificação do Lead: ${name}</b>\n\n` +
+                    `<b>❓ Quando saiu da empresa?</b>\n${answers[1] || 'Não informado'}\n\n` +
+                    `<b>❓ Qual foi o motivo?</b>\n${answers[2] || 'Não informado'}\n\n` +
+                    `<b>❓ Qual era o salário?</b>\n${answers[3] || 'Não informado'}`;
 
     try {
-      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           chat_id: chatId,
           text: message,
-          parse_mode: 'Markdown',
+          parse_mode: 'HTML',
         }),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Telegram API Survey Error:', errorData);
+      }
     } catch (err) {
       console.error('Erro ao enviar respostas para Telegram:', err);
     }
