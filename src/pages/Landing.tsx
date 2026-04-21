@@ -28,6 +28,7 @@ export default function Landing() {
   // Data states
   const [formData, setFormData] = useState({ name: '', phone: '' });
   const [currentLeadId, setCurrentLeadId] = useState<string | null>(null);
+  const [surveyAnswers, setSurveyAnswers] = useState<Record<number, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
 
@@ -104,11 +105,40 @@ export default function Landing() {
     }
   }, []);
 
+  const sendSurveyNotification = useCallback(async (name: string, answers: Record<number, string>) => {
+    const token = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
+    const chatId = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+
+    if (!token || !chatId) return;
+
+    const message = `📋 *Qualificação do Lead: ${name}*\n\n` +
+                    `❓ *Quando saiu da empresa?* \n${answers[1] || 'Não informado'}\n\n` +
+                    `❓ *Qual foi o motivo?* \n${answers[2] || 'Não informado'}\n\n` +
+                    `❓ *Qual era o salário?* \n${answers[3] || 'Não informado'}`;
+
+    try {
+      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message,
+          parse_mode: 'Markdown',
+        }),
+      });
+    } catch (err) {
+      console.error('Erro ao enviar respostas para Telegram:', err);
+    }
+  }, []);
+
   const handleLeadCapture = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
     console.log('Iniciando captura de lead:', formData);
+
+    // Reset answers for new lead
+    setSurveyAnswers({});
 
     // Dispara notificação para Telegram IMEDIATAMENTE (sem travar o fluxo do usuário)
     // Fazemos isso antes ou em paralelo para garantir que se o Supabase falhar, o lead ainda chegue no Telegram
@@ -153,6 +183,9 @@ export default function Landing() {
   }, [formData, sendTelegramNotification]);
 
   const handleSurveyOption = useCallback(async (step: number, optionValue: string) => {
+    const newAnswers = { ...surveyAnswers, [step]: optionValue };
+    setSurveyAnswers(newAnswers);
+
     if (currentLeadId) {
       try {
         const updateData: any = {};
@@ -180,8 +213,10 @@ export default function Landing() {
     } else {
       setIsSurveyOpen(false);
       setIsThankYouOpen(true);
+      // Envia as respostas para o Telegram ao finalizar
+      sendSurveyNotification(formData.name, newAnswers);
     }
-  }, [currentLeadId, currentSurveyStep]);
+  }, [currentLeadId, currentSurveyStep, formData.name, surveyAnswers, sendSurveyNotification]);
 
   const openLegalModal = useCallback((type: 'privacy' | 'terms' | 'ethics') => {
     const contentMap = {
