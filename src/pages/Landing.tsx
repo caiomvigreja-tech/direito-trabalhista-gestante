@@ -221,7 +221,7 @@ export default function Landing() {
       setIsSurveyOpen(false);
       setIsThankYouOpen(true);
       // Envia as respostas para o Telegram ao finalizar
-      sendSurveyNotification(formData.name, newAnswers);
+      await sendSurveyNotification(formData.name, newAnswers);
     }
   }, [currentLeadId, currentSurveyStep, formData.name, surveyAnswers, sendSurveyNotification]);
 
