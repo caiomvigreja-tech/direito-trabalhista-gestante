@@ -70,18 +70,68 @@ export default function Landing() {
     }
   }, []);
 
+  const sendTelegramNotification = useCallback(async (name: string, phone: string) => {
+    const token = import.meta.env.VITE_TELEGRAM_BOT_TOKEN;
+    const chatId = import.meta.env.VITE_TELEGRAM_CHAT_ID;
+
+    if (!token || !chatId) {
+      console.warn('Telegram credentials missing (VITE_TELEGRAM_BOT_TOKEN / VITE_TELEGRAM_CHAT_ID). Notification skipped.');
+      return;
+    }
+
+    const message = `🚀 *Novo Lead Capturado!*\n\n👤 *Nome:* ${name}\n📱 *WhatsApp:* ${phone}\n🔗 *Origem:* Landing Page Gestante`;
+
+    try {
+      console.log('Enviando notificação para Telegram...');
+      const response = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: message,
+          parse_mode: 'Markdown',
+        }),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Telegram API Error:', errorData);
+      } else {
+        console.log('Notificação enviada com sucesso para o Telegram!');
+      }
+    } catch (err) {
+      console.error('Erro de conexão ao enviar para Telegram:', err);
+    }
+  }, []);
+
   const handleLeadCapture = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
+    console.log('Iniciando captura de lead:', formData);
+
+    // Dispara notificação para Telegram IMEDIATAMENTE (sem travar o fluxo do usuário)
+    // Fazemos isso antes ou em paralelo para garantir que se o Supabase falhar, o lead ainda chegue no Telegram
+    sendTelegramNotification(formData.name, formData.phone);
+    
     try {
       const { data, error } = await supabase
         .from('leads')
-        .insert([{ name: formData.name, phone: formData.phone }])
+        .insert([{ 
+          name: formData.name, 
+          phone: formData.phone,
+          status: 'Lead recebido' // Garantindo status inicial
+        }])
         .select()
         .single();
 
+      if (error) {
+        console.error('Erro retornado pelo Supabase:', error);
+        // Se houver erro de RLS ou tabela inexistente, o 'error' virá preenchido
+      }
+
       if (data) {
+        console.log('Lead salvo no Supabase com sucesso:', data.id);
         setCurrentLeadId(data.id);
       }
       
@@ -90,19 +140,17 @@ export default function Landing() {
         (window as any).fbq('track', 'Lead');
       }
 
-      // We always open the survey to not block the user, even if Supabase failed
+      // We always open the survey to not block the user
       setIsSurveyOpen(true);
       setCurrentSurveyStep(1);
-      // No more deadline alert state here
     } catch (err) {
-      console.error('Erro ao salvar lead:', err);
-      // Fallback: even if supabase fails, we still want to show the survey to not block the user
+      console.error('Erro crítico ao salvar lead:', err);
       setIsSurveyOpen(true);
       setCurrentSurveyStep(1);
     } finally {
       setIsSubmitting(false);
     }
-  }, [formData]);
+  }, [formData, sendTelegramNotification]);
 
   const handleSurveyOption = useCallback(async (step: number, optionValue: string) => {
     if (currentLeadId) {
