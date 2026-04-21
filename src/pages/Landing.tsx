@@ -6,6 +6,7 @@ import { Footer } from '../components/Footer';
 import { SurveyModal } from '../components/SurveyModal';
 import { ThankYouModal } from '../components/ThankYouModal';
 import { LegalModal } from '../components/LegalModal';
+import { TrackingScripts } from '../components/TrackingScripts';
 
 const RulesSection = React.lazy(() => import('../components/RulesSection').then(m => ({ default: m.RulesSection })));
 const CalculatorSection = React.lazy(() => import('../components/CalculatorSection').then(m => ({ default: m.CalculatorSection })));
@@ -183,6 +184,7 @@ export default function Landing() {
 
   return (
     <div className="font-sans text-gray-800 bg-white selection:bg-[#C9A44C] selection:text-[#050C3B] antialiased">
+      <TrackingScripts />
       <Header 
         scrollToContact={scrollToContact} 
         calcRef={calcRef} 
