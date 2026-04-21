@@ -27,6 +27,8 @@ export const Header: React.FC<HeaderProps> = ({ scrollToContact, calcRef }) => {
             loading="eager"
             fetchPriority="high"
             decoding="sync"
+            width={64}
+            height={64}
           />
           <div className="flex flex-col justify-center">
             <div className="flex items-center gap-1.5">

@@ -57,6 +57,8 @@ export const MediaSection: React.FC<MediaSectionProps> = React.memo(({
                     className="w-full h-full object-cover opacity-80" 
                     loading="lazy"
                     decoding="async"
+                    width={346}
+                    height={195}
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40">
                     <div className="w-16 h-16 md:w-24 md:h-24 bg-[#C9A44C] rounded-full flex items-center justify-center shadow-2xl">
@@ -86,6 +88,8 @@ export const MediaSection: React.FC<MediaSectionProps> = React.memo(({
                 className="h-10 w-auto object-contain rounded-lg"
                 loading="lazy"
                 decoding="async"
+                width={109}
+                height={40}
               />
             </div>
             <p className="text-gray-600 text-sm md:text-lg leading-[1.6] font-light mb-4 italic font-sans text-pretty">

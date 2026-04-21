@@ -348,7 +348,7 @@ export default function Landing() {
         className="fixed bottom-6 right-6 z-[90] w-16 h-16 md:w-20 md:h-20 drop-shadow-2xl hover:scale-110 transition-all duration-300 group active:scale-95"
         aria-label="Falar no WhatsApp"
       >
-        <img src="/images/whatsapp.svg" alt="WhatsApp" className="w-full h-full object-contain" />
+        <img src="/images/whatsapp.svg" alt="WhatsApp" className="w-full h-full object-contain" width={80} height={80} />
         <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-white text-[#050C3B] px-4 py-2 rounded-lg text-sm font-bold shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-gray-100">
           Falar com Especialista
         </span>

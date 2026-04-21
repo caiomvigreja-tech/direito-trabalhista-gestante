@@ -17,6 +17,8 @@ export const AboutSection: React.FC<AboutSectionProps> = React.memo(({ scrollToC
               className="absolute inset-0 w-full h-full object-cover object-top scale-110" 
               loading="lazy"
               decoding="async"
+              width={400}
+              height={500}
             />
             
             {/* Circular Rotating Badge with Glassmorphism */}
@@ -46,6 +48,8 @@ export const AboutSection: React.FC<AboutSectionProps> = React.memo(({ scrollToC
                     className="w-full h-auto object-contain drop-shadow-lg"
                     loading="lazy"
                     decoding="async"
+                    width={64}
+                    height={64}
                   />
                 </div>
               </div>

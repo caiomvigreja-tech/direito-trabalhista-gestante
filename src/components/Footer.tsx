@@ -16,6 +16,8 @@ export const Footer: React.FC<FooterProps> = React.memo(({ openLegalModal }) => 
               src="/images/logo-branco-fundo-transparente.png" 
               alt="Logo Cunha Advocacia" 
               className="h-20 opacity-100 object-contain ml-[-10px]" 
+              width={64}
+              height={64}
             />
             <div className="space-y-2">
               <p className="text-white font-bold text-lg font-sans">Filipe Cunha Advocacia</p>
@@ -87,6 +89,8 @@ export const Footer: React.FC<FooterProps> = React.memo(({ openLegalModal }) => 
               src="/images/selos-seguranca.png" 
               alt="Selo de Segurança" 
               className="h-16 object-contain opacity-80 hover:opacity-100 transition-opacity" 
+              width={172}
+              height={64}
             />
           </div>
         </div>
