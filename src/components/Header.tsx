@@ -25,7 +25,7 @@ export const Header: React.FC<HeaderProps> = ({ scrollToContact, calcRef }) => {
             alt="Filipe Cunha Advocacia - Especialista em Direitos da Gestante" 
             className={`h-9 md:h-12 w-auto object-contain transition-all duration-500 ${isScrolled ? 'scale-95' : 'scale-100'}`} 
             loading="eager"
-            fetchpriority="high"
+            fetchPriority="high"
             decoding="sync"
           />
           <div className="flex flex-col justify-center">
