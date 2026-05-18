@@ -47,7 +47,7 @@ export const CaptureModal: React.FC<CaptureModalProps> = ({
             Descubra se você tem direito
           </h4>
           <p className="text-gray-500 text-sm sm:text-base mt-2 font-sans font-normal">
-            Receba uma análise gratuita em poucos minutos.
+            Receba uma análise gratuita no WhatsApp.
           </p>
           {/* Separator Gold Line */}
           <div className="h-[3px] w-12 bg-[#C9A44C] mx-auto mt-4 rounded-full" />

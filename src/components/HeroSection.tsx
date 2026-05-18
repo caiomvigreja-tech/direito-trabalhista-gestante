@@ -24,7 +24,7 @@ export const HeroSection: React.FC = React.memo(() => {
             Foi demitida grávida?
           </h1>
           <p className="text-[1.05rem] md:text-xl text-gray-300 font-light leading-relaxed text-pretty font-sans">
-            Em muitos casos, a lei garante indenização. <span className="font-semibold text-white">O valor pode superar <span className="whitespace-nowrap">R$ 20 mil</span> in salários e verbas</span>, sem a obrigação de retornar à empresa.
+            Em muitos casos, a lei garante indenização. <span className="font-semibold text-white">O valor pode superar <span className="whitespace-nowrap">R$ 20 mil</span> em salários e verbas</span>, sem a obrigação de retornar à empresa.
           </p>
         </div>
 
