@@ -7,6 +7,7 @@ import { SurveyModal } from '../components/SurveyModal';
 import { ThankYouModal } from '../components/ThankYouModal';
 import { LegalModal } from '../components/LegalModal';
 import { TrackingScripts } from '../components/TrackingScripts';
+import { CaptureModal } from '../components/CaptureModal';
 
 const RulesSection = React.lazy(() => import('../components/RulesSection').then(m => ({ default: m.RulesSection })));
 const CalculatorSection = React.lazy(() => import('../components/CalculatorSection').then(m => ({ default: m.CalculatorSection })));
@@ -23,6 +24,7 @@ export default function Landing() {
   const [isSurveyOpen, setIsSurveyOpen] = useState(false);
   const [currentSurveyStep, setCurrentSurveyStep] = useState(1);
   const [isThankYouOpen, setIsThankYouOpen] = useState(false);
+  const [isCaptureOpen, setIsCaptureOpen] = useState(false);
   const [legalModal, setLegalModal] = useState<{ isOpen: boolean, title: string, content: React.ReactNode } | null>(null);
 
   // Data states
@@ -65,10 +67,7 @@ export default function Landing() {
   }, []);
 
   const scrollToContact = useCallback(() => {
-    const element = document.getElementById('contact-form');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    setIsCaptureOpen(true);
   }, []);
 
   const sendTelegramNotification = useCallback(async (name: string, phone: string) => {
@@ -178,10 +177,12 @@ export default function Landing() {
       }
 
       // We always open the survey to not block the user
+      setIsCaptureOpen(false);
       setIsSurveyOpen(true);
       setCurrentSurveyStep(1);
     } catch (err) {
       console.error('Erro crítico ao salvar lead:', err);
+      setIsCaptureOpen(false);
       setIsSurveyOpen(true);
       setCurrentSurveyStep(1);
     } finally {
@@ -281,13 +282,7 @@ export default function Landing() {
       />
 
       <main>
-        <HeroSection 
-          formData={formData}
-          onNameChange={handleNameChange}
-          onPhoneChange={handlePhoneChange}
-          onSubmit={handleLeadCapture}
-          isLoading={isSubmitting}
-        />
+        <HeroSection />
 
         <React.Suspense fallback={<div className="py-20 text-center text-gray-400">Carregando...</div>}>
           <CalculatorSection 
@@ -307,19 +302,23 @@ export default function Landing() {
 
           <FaqSection scrollToContact={scrollToContact} />
 
-          <FinalCtaSection 
-            formData={formData}
-            onNameChange={handleNameChange}
-            onPhoneChange={handlePhoneChange}
-            onSubmit={handleLeadCapture}
-            isLoading={isSubmitting}
-          />
+          <FinalCtaSection scrollToContact={scrollToContact} />
         </React.Suspense>
       </main>
 
       <React.Suspense fallback={null}>
         <Footer openLegalModal={openLegalModal} />
       </React.Suspense>
+
+      <CaptureModal
+        isOpen={isCaptureOpen}
+        onClose={() => setIsCaptureOpen(false)}
+        formData={formData}
+        onNameChange={handleNameChange}
+        onPhoneChange={handlePhoneChange}
+        onSubmit={handleLeadCapture}
+        isLoading={isSubmitting}
+      />
 
       <SurveyModal 
         isOpen={isSurveyOpen}
@@ -340,19 +339,7 @@ export default function Landing() {
         content={legalModal?.content || null}
       />
 
-      {/* Floating WhatsApp Button */}
-      <a 
-        href="https://wa.me/5521997035823?text=Olá!%20Encontrei%20seu%20site%20e%20gostaria%20de%20falar%20sobre%20meus%20direitos%20como%20gestante."
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-[90] w-16 h-16 md:w-20 md:h-20 drop-shadow-2xl hover:scale-110 transition-all duration-300 group active:scale-95"
-        aria-label="Falar no WhatsApp"
-      >
-        <img src="/images/whatsapp.svg" alt="WhatsApp" className="w-full h-full object-contain" width={80} height={80} />
-        <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-white text-[#050C3B] px-4 py-2 rounded-lg text-sm font-bold shadow-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none border border-gray-100">
-          Falar com Especialista
-        </span>
-      </a>
+
     </div>
   );
 }

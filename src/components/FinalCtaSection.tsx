@@ -1,21 +1,12 @@
 import React from 'react';
-import { AlertTriangle } from 'lucide-react';
-import { LeadForm } from './LeadForm';
+import { AlertTriangle, ArrowUpRight } from 'lucide-react';
 
 interface FinalCtaSectionProps {
-  formData: { name: string; phone: string };
-  onPhoneChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onNameChange: (name: string) => void;
-  onSubmit: (e: React.FormEvent) => void;
-  isLoading?: boolean;
+  scrollToContact: () => void;
 }
 
 export const FinalCtaSection: React.FC<FinalCtaSectionProps> = React.memo(({
-  formData,
-  onPhoneChange,
-  onNameChange,
-  onSubmit,
-  isLoading
+  scrollToContact
 }) => {
   return (
     <>
@@ -42,21 +33,16 @@ export const FinalCtaSection: React.FC<FinalCtaSectionProps> = React.memo(({
             </p>
           </div>
 
-          <div className="mt-2 p-0 relative">
-            <div className="relative w-full max-w-2xl mx-auto px-4 z-20">
-              <div className="bg-white border border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.4)] rounded-[3rem] p-8 md:p-10 text-left">
-                <div className="pt-2" />
-                <div className="max-w-md mx-auto">
-                  <LeadForm 
-                    formData={formData}
-                    onNameChange={onNameChange}
-                    onPhoneChange={onPhoneChange}
-                    onSubmit={onSubmit}
-                    isLoading={isLoading}
-                  />
-                </div>
+          <div className="mt-8 flex justify-center relative z-20">
+            <button 
+              onClick={scrollToContact}
+              className="bg-gradient-to-r from-[#EBCB8D] to-[#F3E0B5] hover:from-[#F3E0B5] hover:to-[#EBCB8D] text-[#5D4017] text-base md:text-lg px-8 md:px-12 py-4 md:py-5 rounded-full font-bold uppercase tracking-[0.15em] md:tracking-[0.2em] shadow-2xl flex items-center gap-3 transition-all duration-300 hover:scale-105 active:scale-95 group"
+            >
+              <span>INICIAR MINHA ANÁLISE</span>
+              <div className="bg-white rounded-full p-1.5 flex items-center justify-center shadow-sm flex-shrink-0 group-hover:bg-[#5D4017] group-hover:text-white transition-all duration-300 text-[#5D4017]">
+                <ArrowUpRight className="w-4 h-4" />
               </div>
-            </div>
+            </button>
           </div>
         </div>
       </section>
